@@ -10,6 +10,17 @@ Vue.config.productionTip = false;
 
 let app ='';
 
+(async () => {
+  const db = require("./db").default;
+  console.log('Começou!');
+
+  console.log('SELECT * FROM ABRIGO');
+  const clientes = await db.selectAbrigos();
+  console.log(clientes);
+})();
+
+
+
 firebase.auth().onAuthStateChanged(()=>{
   if(!app){
     app = new Vue({
