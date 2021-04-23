@@ -4,41 +4,55 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build"
+    "build": "vue-cli-service build",
+    "start": "node server.js"
   },
   "dependencies": {
     "@sendgrid/mail": "^6.4.0",
     "@vue/cli": "^4.1.1",
     "assert": "*",
     "autoprefixer": "^9.8.6",
-    "axios": "^0.19.0",
+    "axios": "^0.21.1",
     "body-parser": "^1.17.2",
     "bootstrap": "^4.3.1",
     "core-util-is": "^1.0.2",
-    "dns": "^0.2.2",
+    "dns": "^0.1.2",
     "dotenv": "^8.2.0",
     "event-pubsub": "^4.3.0",
-    "firebase": "^6.3.1",
-    "googleapis": "^45.0.0",
+    "express": "^4.17.1",
+    "express-promise-router": "^4.1.0",
+    "firebase": "^8.4.1",
+    "googleapis": "^71.0.0",
+    "grpc": "^1.22.2",
     "moment": "^2.24.0",
     "net": "^1.0.2",
     "node-libs-browser": "^2.2.1",
+    "node-postgres": "^0.6.2",
+    "node-pre-gyp": "^0.17.0",
     "nodemailer": "^6.3.1",
     "pg": "^8.6.0",
+    "pg-adapter": "^1.2.5",
     "pg-native": "^3.0.0",
     "pg-pool": "^3.3.0",
     "postgres": "^1.0.2",
     "postgres-pool": "^5.0.0",
     "python": "^0.0.4",
+    "socket.io": "^0.9.16",
+    "socket.io-adapter-postgres": "^1.2.1",
     "vue": "^2.6.10",
     "vue-router": "^3.0.3",
     "vue2-google-maps": "^0.10.7",
     "vuefire": "^2.1.0",
-    "vuex": "^3.0.1"
+    "vuex": "^3.0.1",
+    "webpack-node-externals": "^2.5.2"
   },
   "devDependencies": {
-    "@vue/cli-service": "^3.9.0",
+    "@vue/cli-service": "^4.5.12",
+    "nodemon": "^1.19.4",
     "postcss-import": "^14.0.1",
     "vue-template-compiler": "^2.6.10"
+  },
+  "browser": {
+    "net": "empty"
   }
 }
