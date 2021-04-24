@@ -57,6 +57,7 @@
 <script>
     import db from './firebaseInit'
     import firebase from 'firebase'
+        import Api from '../Api';
 
 
        $(document).ready(function(){
@@ -86,28 +87,40 @@ export default{
     },
 
     methods: {
-        salvarAnimal(){
+        salvarAnimal: async function() {
 
-            firebase.auth().onAuthStateChanged((user) => {
-                        if (user) {
-                        // User logged in already or has just logged in.
-                        db.collection('abrigo').doc(user.uid).collection('animal').add({
-                            id_animal: this.id_animal,
-                            nome:this.nome,
-                            tipo:this.selected,
-                            idade:this.idade,
-                            raca:this.raca,
-                            foto:this.foto,
-                            abrigoDono: firebase.auth().currentUser.email
-                        })
+             var animal = {
+                nome_animal: this.nome,
+                raca_animal: this.raca,
+                idade_animal: this.idade,
+                tipo_animal: this.selected,
+                img_url: this.foto
+            };
+                 const response = await Api().post('/animal', animal);
+                 this.$router.push('/listaAnimais');
+                return response.data;
+
+
+            // firebase.auth().onAuthStateChanged((user) => {
+            //             if (user) {
+            //             // User logged in already or has just logged in.
+            //             db.collection('abrigo').doc(user.uid).collection('animal').add({
+            //                 id_animal: this.id_animal,
+            //                 nome:this.nome,
+            //                 tipo:this.selected,
+            //                 idade:this.idade,
+            //                 raca:this.raca,
+            //                 foto:this.foto,
+            //                 abrigoDono: firebase.auth().currentUser.email
+            //             })
                         
-                        }
-                    }).then(
-                    this.$router.push('/listaAnimais') 
-                )
-                .catch(error => {
-                    console.log(err)
-                })
+            //             }
+            //         }).then(
+            //         this.$router.push('/listaAnimais') 
+            //     )
+            //     .catch(error => {
+            //         console.log(err)
+            //     })
         }
     }
   
