@@ -36,8 +36,12 @@
 <script>
     import firebase from 'firebase'
     import db from '../components/firebaseInit'   // importando o db para ter acesso a instanciação no campo "abrigo"
+    import { callbackify } from 'util';
     var treco = false;
+    import Api from '../Api';
 
+
+    
     export default {
         name: "cadastro",
         data(){
@@ -76,9 +80,22 @@
                     function (err) {
                         alert('Espere! ' + err.message)
                     }
-                );}
-        }
-    }
+                );
+                this.saveAbrigo();
+            },
+            saveAbrigo: async function() {
+                var abrigo = {
+                nome_abrigo: this.nome,
+                email_abrigo: this.email,
+                telefone_abrigo: this.telefone,
+                endereco_abrigo: this.endereco
+                };
+                 const response = await Api().post('/abrigo', abrigo);
+                 return response.data;
+                    },
+                    
+                }
+            }
 
 </script>
 
