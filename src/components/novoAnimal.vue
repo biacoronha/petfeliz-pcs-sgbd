@@ -108,28 +108,6 @@ export default{
 
             this.$router.push('/listaAnimais');
             return responseAbrigoAnimal.data;
-
-
-            // firebase.auth().onAuthStateChanged((user) => {
-            //             if (user) {
-            //             // User logged in already or has just logged in.
-            //             db.collection('abrigo').doc(user.uid).collection('animal').add({
-            //                 id_animal: this.id_animal,
-            //                 nome:this.nome,
-            //                 tipo:this.selected,
-            //                 idade:this.idade,
-            //                 raca:this.raca,
-            //                 foto:this.foto,
-            //                 abrigoDono: firebase.auth().currentUser.email
-            //             })
-                        
-            //             }
-            //         }).then(
-            //         this.$router.push('/listaAnimais') 
-            //     )
-            //     .catch(error => {
-            //         console.log(err)
-            //     })
         }
     }
   
