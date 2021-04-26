@@ -35,17 +35,17 @@ exports.listAllAbrigoAnimais = async (req, res) => {
     }
   };
 
-//get one abrigoAnimais by id
+//get abrigoAnimais by id abrigo
 exports.findAbrigoAnimaisById = async (req, res) => {
-  const { id } = req.params;
+  const { id_abrigo } = req.params;
   try {
     const { rows } = await db.query(`SELECT * FROM abrigo_animal WHERE id_abrigo = $1`,
-      [id]
+      [id_abrigo]
     );
     if (!rows.length) {
       throw 'abrigoAnimais_not_found';
     }
-    res.status(200).send(rows[0]);
+    res.status(200).send(rows);
   } catch (error) {
     console.error('findAbrigoAnimaisById', error);
     if (error == 'abrigoAnimais_not_found') {

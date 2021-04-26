@@ -32,7 +32,7 @@
     import firebase from 'firebase'
     import Navbar from './Navbar'
     import db from './firebaseInit'
-
+    import Api from '../Api';
    
 export default{
     name: "listaAnimais",
@@ -47,32 +47,23 @@ export default{
        
 
         created(){
-
             firebase.auth().onAuthStateChanged((user) => {
                 if(user){
-                    db.collection('abrigo').doc(user.uid).collection('animal')
-                        .get()
-                        .then(querrySnapshot=>{
-                            querrySnapshot.forEach(doc =>{
-                                const data = {
-                                    'id': doc.id,
-                                    'id_animal':doc.data().id_animal,
-                                    'nome':doc.data().nome,
-                                    'tipo':doc.data().tipo,
-                                    'raca':doc.data().raca,
-                                    'idade': doc.data().idade,
-                                    'foto': doc.data().foto,
-                                    'abrigoDono': doc.data().abrigoDono
-                                }
-                                this.animal.push(data)
-                            })
-                        })                    
+                const id_abrigo = firebase.auth().currentUser.uid;
+                const responseAbrigoAnimal = Api().get(`/abrigoAnimal/${id_abrigo}`);
+                responseAbrigoAnimal.then((value) => {
+                    value.data.forEach(animal => {
+                        var id_animal = animal.id_animal;
+                         const responseAnimal = Api().get(`/animal/${id_animal}`);
+                         responseAnimal.then((valueAnimal)=>{
+                             this.animal.push(valueAnimal.data)
+                         })
+                    });
+                    return this.animal;
+                });                
                 }
             })
-
         },
-    
-
 }
 </script>
 

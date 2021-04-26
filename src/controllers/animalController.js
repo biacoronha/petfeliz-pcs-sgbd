@@ -2,16 +2,16 @@ const db = require("../db");
 
 //create animal
 exports.createAnimal = async (req, res) => {
-  const { nome_animal, raca_animal, idade_animal, tipo_animal, img_url } = req.body;
+  const { id_animal, nome_animal, raca_animal, idade_animal, tipo_animal, img_url } = req.body;
   try {
     const { rows } = await db.query(
-      "INSERT INTO animal (nome_animal, raca_animal, idade_animal, tipo_animal, img_url) VALUES ($1, $2, $3, $4, $5)",
-      [nome_animal, raca_animal, idade_animal, tipo_animal, img_url]
+      "INSERT INTO animal (id_animal, nome_animal, raca_animal, idade_animal, tipo_animal, img_url) VALUES ($1, $2, $3, $4, $5, $6)",
+      [id_animal, nome_animal, raca_animal, idade_animal, tipo_animal, img_url]
     );
     res.status(201).send({
       message: "Animal added successfully!",
       body: {
-        animal: { nome_animal, raca_animal, idade_animal, tipo_animal, img_url },
+        animal: { id_animal, nome_animal, raca_animal, idade_animal, tipo_animal, img_url },
       },
     });
   } catch (error) {
@@ -37,10 +37,10 @@ exports.listAllAnimais = async (req, res) => {
 
 //get one animal
 exports.findAnimalById = async (req, res) => {
-  const { id } = req.params;
+  const { id_animal } = req.params;
   try {
     const { rows } = await db.query(`SELECT * FROM animal WHERE id_animal = $1`,
-      [id]
+      [id_animal]
     );
     if (!rows.length) {
       throw 'animal_not_found';

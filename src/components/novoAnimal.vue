@@ -90,15 +90,24 @@ export default{
         salvarAnimal: async function() {
 
              var animal = {
+                id_animal: this.id_animal,
                 nome_animal: this.nome,
                 raca_animal: this.raca,
                 idade_animal: this.idade,
                 tipo_animal: this.selected,
                 img_url: this.foto
             };
-                 const response = await Api().post('/animal', animal);
-                 this.$router.push('/listaAnimais');
-                return response.data;
+                 const responseAnimal = await Api().post('/animal', animal);
+
+            var abrigoAnimal = {
+                id_animal: this.id_animal,
+                id_abrigo: firebase.auth().currentUser.uid
+            }
+
+            const responseAbrigoAnimal = await Api().post('/abrigoAnimal', abrigoAnimal);
+
+            this.$router.push('/listaAnimais');
+            return responseAbrigoAnimal.data;
 
 
             // firebase.auth().onAuthStateChanged((user) => {

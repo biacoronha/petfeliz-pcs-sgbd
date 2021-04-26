@@ -2,16 +2,16 @@ const db = require("../db");
 
 //create abrigo
 exports.createAbrigo = async (req, res) => {
-  const { nome_abrigo, email_abrigo, telefone_abrigo, endereco_abrigo } = req.body;
+  const { id_abrigo, nome_abrigo, email_abrigo, telefone_abrigo, endereco_abrigo } = req.body;
   try {
     const { rows } = await db.query(
-      "INSERT INTO abrigo (nome_abrigo, email_abrigo, telefone_abrigo, endereco_abrigo) VALUES ($1, $2, $3, $4)",
-      [nome_abrigo, email_abrigo, telefone_abrigo, endereco_abrigo]
+      "INSERT INTO abrigo (id_abrigo, nome_abrigo, email_abrigo, telefone_abrigo, endereco_abrigo) VALUES ($1, $2, $3, $4, $5 )",
+      [id_abrigo, nome_abrigo, email_abrigo, telefone_abrigo, endereco_abrigo]
     );
     res.status(201).send({
       message: "Abrigo added successfully!",
       body: {
-        abrigo: { nome_abrigo, email_abrigo, telefone_abrigo, endereco_abrigo },
+        abrigo: { id_abrigo, nome_abrigo, email_abrigo, telefone_abrigo, endereco_abrigo },
       },
     });
   } catch (error) {
