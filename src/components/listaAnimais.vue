@@ -11,8 +11,8 @@
                   <router-link to="/animaisOutro" 
                   class="waves-effect waves-light btn-small" >Outros</router-link>
             <li v-for="animal in animal"
-            v-bind:key="animal.id" class="collection-item">
-            {{animal.nome}}
+            v-bind:key="animal.id_animal" class="collection-item">
+            {{animal.nome_animal}}
             <router-link class="secondary-content" v-bind:to="{name: 'verAnimal', params:{id_animal: animal.id_animal}}">
                  <i class="fa fa-eye"></i>
              </router-link>
