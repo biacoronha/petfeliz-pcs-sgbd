@@ -30,8 +30,6 @@
 
 <script>
     import firebase from 'firebase'
-    import Navbar from './Navbar'
-    import db from './firebaseInit'
     import Api from '../Api';
    
 export default{
@@ -43,8 +41,6 @@ export default{
                 animal: []
             }
         },
-
-       
 
         created(){
             firebase.auth().onAuthStateChanged((user) => {

@@ -85,9 +85,9 @@ exports.updateAnimalById = async (req, res) => {
 
 //delete animal by id
 exports.deleteAnimalById = async (req, res) => {
-  const { id } = req.params;
+  const { id_animal } = req.params;
   try {
-    await db.query("DELETE FROM animal WHERE id_animal = $1", [id]);
+    await db.query("DELETE FROM animal WHERE id_animal = $1", [id_animal]);
     res.status(200).send({ message: "Animal deleted successfully!" });
   } catch (error) {
     console.error('deleteAnimalById', error);

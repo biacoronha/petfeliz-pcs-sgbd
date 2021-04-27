@@ -16,6 +16,6 @@ router.get('/animal/:id_animal', animalController.findAnimalById)
 router.put('/animal/:id', animalController.updateAnimalById)
 
 // ==> Rota responsável por deletar/excluir um determinado 'Animal por Id: localhost:3000/api/animal/:id
-router.delete('/animal/:id', animalController.deleteAnimalById);
+router.delete('/animal/:id_animal', animalController.deleteAnimalById);
 
 module.exports = router;

@@ -28,6 +28,8 @@
 <script>
 import db from "./firebaseInit";
 import firebase from 'firebase';
+import Api from '../Api';
+
 export default {
     name: "verAnimal",
     data() {
@@ -44,60 +46,50 @@ export default {
   beforeRouteEnter(to, from, next) {
     var user = firebase.auth().currentUser
     if(user){
-      db.collection('abrigo').doc(user.uid).collection('animal')
-        .where("id_animal", "==", to.params.id_animal)
-        .get()
-        .then(querySnapshot => {
-          querySnapshot.forEach(doc => {
-            next(vm => {
-              vm.id_animal = doc.data().id_animal;
-              vm.nome = doc.data().nome;
-              vm.tipo = doc.data().tipo;
-              vm.idade = doc.data().idade;
-              vm.raca = doc.data().raca;
-              vm.foto = doc.data().foto;
-              vm.abrigoDono = doc.data().abrigoDono;
-            });
-          });
+      const id_animal = to.params.id_animal;
+      const responseAnimal = Api().get(`/animal/${id_animal}`);
+      responseAnimal.then((value) => {
+        next(vm => {
+          const animal = value.data;
+          vm.id_animal = id_animal
+          vm.nome = animal.nome_animal
+          vm.tipo = animal.tipo_animal
+          vm.idade = animal.idade_animal
+          vm.raca = animal.raca_animal
+          vm.foto = animal.img_url
         });
+      });
     }
   },
   watch: {
     $route: "fetchData"
   },
   methods: {
+    
     fetchData() {
       var user = firebase.auth().currentUser
       if(user){
-      db.collection('abrigo').doc(user.uid).collection('animal')
-        .where("id_animal", "==", this.$route.params.id_animal)
-        .get()
-        .then(querySnapshot => {
-          querySnapshot.forEach(doc => {
-            this.id_animal = doc.data().id_animal;
-            this.nome = doc.data().nome;
-            this.tipo = doc.data().tipo;
-            this.idade = doc.data().idade;
-            this.raca = doc.data().raca;
-            this.foto = doc.data().foto;
-            this.abrigoDono = doc.data().abrigoDono;
-          });
-        });
-    }
-    },
-    deletarAnimal() {
+        const id_animal = this.$route.params.id_animal;
+        const responseAnimal = Api().get(`/animal/${id_animal}`);
+        responseAnimal.then((value) => {
+          const animal = value.data;
+          this.id_animal = id_animal
+          this.nome = animal.nomw_animal
+          this.tipo = animal.tipo_animal
+          this.idade = animal.idade_animal
+          this.raca = animal.raca_animal
+          this.foto = animal.img_url
+      });
+      }
+     },
+    deletarAnimal: async function() {
       var user = firebase.auth().currentUser
       if(user){
       if (confirm("Tem certeza que deseja deletar esse animal?")) {
-        db.collection('abrigo').doc(user.uid).collection('animal')
-          .where("id_animal", "==", this.$route.params.id_animal)
-          .get()
-          .then(querySnapshot => {
-            querySnapshot.forEach(doc => {
-              doc.ref.delete();
-              this.$router.push("../listaAnimais");
-            });
-          });
+        const id_animal = this.$route.params.id_animal;
+        const responseAbrigoAnimal = await Api().delete(`/abrigoAnimal/${id_animal}`);
+        const responseAnimal = await Api().delete(`/animal/${id_animal}`);
+         this.$router.push("../listaAnimais");
       }
     }
   }

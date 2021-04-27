@@ -12,7 +12,7 @@ router.get('/abrigoAnimal', abrigoAnimalController.listAllAbrigoAnimais);
 // ==> Rota responsável por listar todos os 'abrigoAnimal' por Id do abrigo: (GET): localhost:3000/api/abrigoAnimal/:id
 router.get('/abrigoAnimal/:id_abrigo', abrigoAnimalController.findAbrigoAnimaisById)
 
-// ==> Rota responsável por deletar/excluir um determinado 'abrigoAnimal' por Id: localhost:3000/api/abrigoAnimal/:id
-router.delete('/abrigoAnimal/:id', abrigoAnimalController.deleteAbrigoAnimalById);
+// ==> Rota responsável por deletar/excluir um determinado 'abrigoAnimal' por Id animal: localhost:3000/api/abrigoAnimal/:id
+router.delete('/abrigoAnimal/:id_animal', abrigoAnimalController.deleteAbrigoAnimalById);
 
 module.exports = router;

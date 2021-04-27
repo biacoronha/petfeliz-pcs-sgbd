@@ -60,11 +60,11 @@ exports.findAbrigoAnimaisById = async (req, res) => {
   }
 };
 
-//delete abrigoAnimal by id
+//delete abrigoAnimal by id abrigo
 exports.deleteAbrigoAnimalById = async (req, res) => {
-  const { id_animal, id_abrigo } = req.params;
+  const { id_animal } = req.params;
   try {
-    await db.query("DELETE FROM abrigo_animal WHERE id_animal = $1, id_abrigo = $2", [id_animal, id_abrigo]);
+    await db.query("DELETE FROM abrigo_animal WHERE id_animal = $1", [id_animal]);
     res.status(200).send({ message: "AbrigoAnimal deleted successfully!" });
   } catch (error) {
     console.error('deleteEventoById', error);
