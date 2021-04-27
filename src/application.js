@@ -14,6 +14,7 @@ const seguidorRoutes = require('./routes/seguidorRoutes');
 const usuarioRoutes = require('./routes/usuarioRoutes');
 const votoAbrigoRoutes = require('./routes/votoAbrigoRoutes');
 const votoEventoRoutes = require('./routes/votoEventoRoutes');
+const HamburguerRoutes = require('./routes/HamburguerRoutes')
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -30,5 +31,6 @@ app.use('/api/', seguidorRoutes);
 app.use('/api/', usuarioRoutes);
 app.use('/api/', votoAbrigoRoutes);
 app.use('/api/', votoEventoRoutes);
+app.use('/api/', HamburguerRoutes);
 
 module.exports = app;

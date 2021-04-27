@@ -19,7 +19,6 @@
     "dns": "^0.1.2",
     "dotenv": "^8.2.0",
     "event-pubsub": "^4.3.0",
-    "express": "^4.17.1",
     "express-promise-router": "^4.1.0",
     "firebase": "^8.4.1",
     "googleapis": "^71.0.0",
@@ -48,11 +47,26 @@
   },
   "devDependencies": {
     "@vue/cli-service": "^4.5.12",
+    "express": "^4.17.1",
+    "mongoose": "^5.12.5",
     "nodemon": "^1.19.4",
     "postcss-import": "^14.0.1",
     "vue-template-compiler": "^2.6.10"
   },
   "browser": {
     "net": "empty"
-  }
+  },
+  "description": "```\r npm install\r ```",
+  "main": "postcss.config.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/biacoronha/petfeliz-pcs-sgbd.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/biacoronha/petfeliz-pcs-sgbd/issues"
+  },
+  "homepage": "https://github.com/biacoronha/petfeliz-pcs-sgbd#readme"
 }
