@@ -62,7 +62,7 @@ exports.findAnimalById = async (req, res) => {
 
 //update animal by id
 exports.updateAnimalById = async (req, res) => {
-  const { id } = req.params;
+  const { id_animal } = req.params;
   try {
     const { nome_animal, raca_animal, idade_animal, tipo_animal, img_url } = req.body;
     const { rows } = await db.query(`UPDATE animal 
@@ -70,9 +70,9 @@ exports.updateAnimalById = async (req, res) => {
                                     raca_animal = $2, 
                                     idade_animal = $3, 
                                     tipo_animal = $4,
-                                    img_url = $5, 
+                                    img_url = $5 
                                     WHERE id_animal = $6`,
-      [nome_animal, raca_animal, idade_animal, tipo_animal, img_url, id]
+      [nome_animal, raca_animal, idade_animal, tipo_animal, img_url, id_animal]
     );
     res.status(200).send({ message: "Animal Updated Successfully!" });
   } catch (error) {

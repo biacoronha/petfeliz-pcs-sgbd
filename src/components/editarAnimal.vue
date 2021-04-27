@@ -51,6 +51,7 @@
 <script>
     import db from './firebaseInit'
     import firebase from'firebase'
+    import Api from '../Api';
 
     $(document).ready(function(){
     $('select').formSelect();
@@ -71,21 +72,22 @@
         }
     },
     beforeRouteEnter(to, from, next){
-        var user = firebase.auth().currentUser
-        db.collection('abrigo').doc(user.uid).collection('animal').where('id_animal','==',to.params.id_animal).get().then(querySnapshot =>{
-            querySnapshot.forEach(doc => {
-                next(vm => {
-                    vm.id_animal = doc.data().id_animal;
-                    vm.nome = doc.data().nome;
-                    vm.tipo = doc.data().tipo;
-                    vm.idade = doc.data().idade;
-                    vm.raca = doc.data().raca;
-                    vm.foto = doc.data().foto;
-                    vm.abrigoDono = doc.data().abrigoDono;
-                })
-            })
-        })
-    },
+   var user = firebase.auth().currentUser
+    if(user){
+      const id_animal = to.params.id_animal;
+      const responseAnimal = Api().get(`/animal/${id_animal}`);
+      responseAnimal.then((value) => {
+        next(vm => {
+          const animal = value.data;
+          vm.id_animal = id_animal
+          vm.nome = animal.nome_animal
+          vm.tipo = animal.tipo_animal
+          vm.idade = animal.idade_animal
+          vm.raca = animal.raca_animal
+          vm.foto = animal.img_url
+        });
+      });
+    }    },
     watch:{
         '$route': 'fetchData'
     },
@@ -98,39 +100,55 @@
 
     methods: {
         fetchData(){
-             var user = firebase.auth().currentUser
-            db.collection('abrigo').doc(user.uid).collection('animal').where('id_animal','==',this.$route.params.id_animal).get().then(querySnapshot => {
-            querySnapshot.forEach(doc => {
-                this.id_animal = doc.data().id_animal;
-                this.nome = doc.data().nome;
-                this.tipo = doc.data().tipo;
-                this.idade = doc.data().idade;
-                this.raca = doc.data().raca;
-                this.foto = doc.data().foto;
-                this.abrigoDono = doc.data().abrigoDono;
-            })
-            })
+      var user = firebase.auth().currentUser
+      if(user){
+        const id_animal = this.$route.params.id_animal;
+        const responseAnimal = Api().get(`/animal/${id_animal}`);
+        responseAnimal.then((value) => {
+          const animal = value.data;
+          this.id_animal = id_animal
+          this.nome = animal.nomw_animal
+          this.tipo = animal.tipo_animal
+          this.idade = animal.idade_animal
+          this.raca = animal.raca_animal
+          this.foto = animal.img_url
+      });
+      }
         },
-        updateAnimal(){
-             var user = firebase.auth().currentUser
-            db.collection('abrigo').doc(user.uid).collection('animal').where('id_animal','==',this.$route.params.id_animal).get().then(querySnapshot => {
-            querySnapshot.forEach(doc => {
-               doc.ref.update({
+        updateAnimal: async function(){
+            var user = firebase.auth().currentUser
+            if(user){
+                const id_animal = this.$route.params.id_animal;
+                var animal = {
                     id_animal: this.id_animal,
-                    nome:this.nome,
-                    tipo:this.selected,
-                    idade:this.idade,
-                    raca:this.raca,
-                    foto:this.foto,
-                    abrigoDono:  firebase.auth().currentUser.email
-               })
-               .then(
-                   () =>
-                   this.$router.push({name: 'verAnimal', params: {id_animal:this.id_animal}})
-               )
-            })
-            })
-        }
+                    nome_animal: this.nome,
+                    tipo_animal: this.selected,
+                    idade_animal: this.idade,
+                    raca_animal: this.raca,
+                    img_url: this.foto
+                }
+                const responseAnimal = await Api().put(`/animal/${id_animal}`, animal);
+                this.$router.push("../listaAnimais");
+                }
+            }
+            //var user = firebase.auth().currentUser
+            // db.collection('abrigo').doc(user.uid).collection('animal').where('id_animal','==',this.$route.params.id_animal).get().then(querySnapshot => {
+            // querySnapshot.forEach(doc => {
+            //    doc.ref.update({
+            //         id_animal: this.id_animal,
+            //         nome:this.nome,
+            //         tipo:this.selected,
+            //         idade:this.idade,
+            //         raca:this.raca,
+            //         foto:this.foto,
+            //         abrigoDono:  firebase.auth().currentUser.email
+            //    })
+            //    .then(
+            //        () =>
+            //        this.$router.push({name: 'verAnimal', params: {id_animal:this.id_animal}})
+            //    )
+            // })
+            // })
     
     }
   

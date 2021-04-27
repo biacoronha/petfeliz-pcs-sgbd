@@ -13,7 +13,7 @@ router.get('/animal', animalController.listAllAnimais);
 router.get('/animal/:id_animal', animalController.findAnimalById)
 
 // ==> Rota reponsável por atualizar um determinado 'Animal por Id: (PUT): localhost:3000/api/animal/:id
-router.put('/animal/:id', animalController.updateAnimalById)
+router.put('/animal/:id_animal', animalController.updateAnimalById)
 
 // ==> Rota responsável por deletar/excluir um determinado 'Animal por Id: localhost:3000/api/animal/:id
 router.delete('/animal/:id_animal', animalController.deleteAnimalById);
