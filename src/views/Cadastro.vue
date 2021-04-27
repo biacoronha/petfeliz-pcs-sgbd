@@ -71,9 +71,7 @@
                         countAvaliacoes: this.countAvaliacoes,
                         id_abrigo:treco.uid
                       })
-                      setTimeout(function() {
                         this.saveAbrigo();
-                      },1000);
                         }
                         this.$router.push('login')
                         location.reload();
