@@ -10,6 +10,11 @@ npm install
 npm i vue2-google-maps
 ```
 
+### Run server side
+```
+npm run start
+```
+
 ### Compiles and hot-reloads for development
 ```
 npm run serve
