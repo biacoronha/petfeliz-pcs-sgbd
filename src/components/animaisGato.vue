@@ -12,7 +12,7 @@
                   class="waves-effect waves-light btn-small" >Outros</router-link>
             <li v-for="animal in animal"
             v-bind:key="animal.id" class="collection-item">
-            {{animal.nome}}
+            {{animal.nome_animal}}
             <router-link class="secondary-content" v-bind:to="{name: 'verAnimal', params:{id_animal: animal.id_animal}}">
                  <i class="fa fa-eye"></i>
              </router-link>
@@ -32,7 +32,7 @@
     import firebase from 'firebase'
     import Navbar from './Navbar'
     import db from './firebaseInit'
-
+    import Api from '../Api';
    
 export default{
     name: "listaAnimais",
@@ -50,23 +50,13 @@ export default{
 
             firebase.auth().onAuthStateChanged((user) => {
                 if(user){
-                    db.collection('abrigo').doc(user.uid).collection('animal').where("tipo", "==", "Gato")
-                        .get()
-                        .then(querrySnapshot=>{
-                            querrySnapshot.forEach(doc =>{
-                                const data = {
-                                    'id_animal' : doc.data().id_animal,
-                                    'id': doc.id,
-                                    'nome':doc.data().nome,
-                                    'tipo':doc.data().tipo,
-                                    'raca':doc.data().raca,
-                                    'idade': doc.data().idade,
-                                    'foto': doc.data().foto,
-                                    'abrigoDono': doc.data().abrigoDono
-                                }
-                                this.animal.push(data)
-                            })
-                        })                    
+                    const id_abrigo = firebase.auth().currentUser.uid;
+                    const tipo_animal = "Gato"
+                    const response = Api().get(`/animal/byTipo/${id_abrigo}/${tipo_animal}`);
+                    response.then((valueAnimal)=>{
+                        this.animal.push(valueAnimal.data)
+                    })
+                    return this.animal;                    
                 }
             })
 

@@ -35,7 +35,7 @@ exports.listAllAnimais = async (req, res) => {
     }
   };
 
-//get one animal
+//get one animal by id
 exports.findAnimalById = async (req, res) => {
   const { id_animal } = req.params;
   try {
@@ -59,6 +59,33 @@ exports.findAnimalById = async (req, res) => {
     }
   }
 };
+
+//get one animal by tipo e abrigo
+exports.findAnimalByTipo = async (req, res) => {
+  const { id_abrigo, tipo_animal } = req.params;
+  try {
+    const { rows } = await db.query(`SELECT * FROM animal a JOIN abrigo_animal aa ON a.id_animal = aa.id_animal WHERE aa.id_abrigo = $1
+    and a.tipo_animal = $2`,
+      [id_abrigo, tipo_animal]
+    );
+    if (!rows.length) {
+      throw 'animal_not_found';
+    }
+    res.status(200).send(rows[0]);
+  } catch (error) {
+    console.error('findAnimalById', error);
+    if (error == 'animal_not_found') {
+      res.status(404).send({
+        message: "Animal not found."
+      });
+    } else {
+      res.status(500).send({
+        message: "Ocorreu um erro."
+      });
+    }
+  }
+};
+
 
 //update animal by id
 exports.updateAnimalById = async (req, res) => {

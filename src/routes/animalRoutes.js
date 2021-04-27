@@ -12,6 +12,9 @@ router.get('/animal', animalController.listAllAnimais);
 // ==> Rota responsável por listar um determinado 'Animal' por Id: (GET): localhost:3000/api/animal/:id
 router.get('/animal/:id_animal', animalController.findAnimalById)
 
+// ==> Rota responsável por listar todos os 'Animal' tipo: (GET): localhost:3000/api/animal/byTipo/id/tipo
+router.get('/animal/byTipo/:id_abrigo/:tipo_animal', animalController.findAnimalByTipo)
+
 // ==> Rota reponsável por atualizar um determinado 'Animal por Id: (PUT): localhost:3000/api/animal/:id
 router.put('/animal/:id_animal', animalController.updateAnimalById)
 
