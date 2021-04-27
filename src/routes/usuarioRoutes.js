@@ -16,6 +16,6 @@ router.get('/usuario/:id', usuarioController.findUsuarioById)
 router.put('/usuario/:id', usuarioController.updateUsuarioById)
 
 // ==> Rota responsável por deletar/excluir um determinado 'Usuario por Id: localhost:3000/api/usuario/:id
-router.delete('/usuario/:id', usuarioController.deleteUsuarioById);
+router.delete('/usuario/:id_usuario', usuarioController.deleteUsuarioById);
 
 module.exports = router;

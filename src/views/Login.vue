@@ -29,6 +29,7 @@
     import firebase from 'firebase'
     import db from '../components/firebaseInit'
     import { Script } from 'vm';
+    import Api from '../Api';
     
     var usuarioLogado
 
@@ -64,6 +65,7 @@
                         nome:usuarioLogado.displayName,
                         photoURL:usuarioLogado.photoURL
                     })
+                    this.saveUsuario(usuarioLogado);
                 };
             },
             
@@ -82,6 +84,7 @@
                         nome:usuarioLogado.displayName,
                         photoURL:usuarioLogado.photoURL
                     })
+                    this.saveUsuario(usuarioLogado);
                 }
 
             this.$router.replace('home');
@@ -89,7 +92,19 @@
             }).catch((err) => {
             alert('Oops. ' + err.message)
             });
-        }   
+        },
+        saveUsuario: async function(usuarioLogado) {
+            var usuario = {
+                id_usuario: usuarioLogado.uid,
+                nome_usuario: usuarioLogado.displayName,
+                email_usuario: usuarioLogado.email,
+                foto_url: usuarioLogado.photoURL
+            }
+            const response = await Api().post('/usuario', usuario);
+            return response.data;
+
+
+        }
     }
   }
 </script>  

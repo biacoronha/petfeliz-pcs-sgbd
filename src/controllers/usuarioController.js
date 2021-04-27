@@ -2,16 +2,16 @@ const db = require("../db");
 
 //create usuario
 exports.createUsuario = async (req, res) => {
-  const { nome_abrigo, email_usuario, foto_url } = req.body;
+  const { id_usuario, nome_usuario, email_usuario, foto_url } = req.body;
   try {
     const { rows } = await db.query(
-      "INSERT INTO usuario (nome_abrigo, email_usuario, foto_url) VALUES ($1, $2, $3)",
-      [nome_abrigo, email_usuario, foto_url]
+      "INSERT INTO usuario (id_usuario, nome_abrigo, email_usuario, foto_url) VALUES ($1, $2, $3, $4)",
+      [id_usuario, nome_usuario, email_usuario, foto_url]
     );
     res.status(201).send({
       message: "Usuario added successfully!",
       body: {
-        usuario: { nome_abrigo, email_usuario, foto_url },
+        usuario: { id_usuario, nome_usuario, email_usuario, foto_url },
       },
     });
   } catch (error) {
@@ -83,9 +83,9 @@ exports.updateUsuarioById = async (req, res) => {
 
 //delete usuario by id
 exports.deleteUsuarioById = async (req, res) => {
-  const { id } = req.params;
+  const { id_usuario } = req.params;
   try {
-    await db.query("DELETE FROM usuario WHERE id_usuario = $1", [id]);
+    await db.query("DELETE FROM usuario WHERE id_usuario = $1", [id_usuario]);
     res.status(200).send({ message: "Usuario deleted successfully!" });
   } catch (error) {
     console.error('deleteUsuarioById', error);
