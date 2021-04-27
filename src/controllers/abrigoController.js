@@ -37,10 +37,10 @@ exports.listAllAbrigos = async (req, res) => {
 
 //get one abrigo
 exports.findAbrigoById = async (req, res) => {
-  const { id } = req.params;
+  const { id_abrigo } = req.params;
   try {
     const { rows } = await db.query(`SELECT * FROM abrigo WHERE id_abrigo = $1`,
-      [id]
+      [id_abrigo]
     );
     if (!rows.length) {
       throw 'abrigo_not_found';
@@ -84,9 +84,9 @@ exports.updateAbrigoById = async (req, res) => {
 
 //delete abrigo by id
 exports.deleteAbrigoById = async (req, res) => {
-  const { id } = req.params;
+  const { id_abrigo } = req.params;
   try {
-    await db.query("DELETE FROM abrigo WHERE id_abrigo = $1", [id]);
+    await db.query("DELETE FROM abrigo WHERE id_abrigo = $1", [id_abrigo]);
     res.status(200).send({ message: "Abrigo deleted successfully!" });
   } catch (error) {
     console.error('deleteAbrigoById', error);

@@ -10,12 +10,12 @@ router.post('/abrigo', abrigoController.createAbrigo);
 router.get('/abrigo', abrigoController.listAllAbrigos);
 
 // ==> Rota responsável por listar um determinado 'Abrigo' por Id: (GET): localhost:3000/api/abrigo/:id
-router.get('/abrigo/:id', abrigoController.findAbrigoById)
+router.get('/abrigo/:id_abrigo', abrigoController.findAbrigoById)
 
 // ==> Rota reponsável por atualizar um determinado 'Abrigo por Id: (PUT): localhost:3000/api/abrigo/:id
 router.put('/abrigo/:id', abrigoController.updateAbrigoById)
 
 // ==> Rota responsável por deletar/excluir um determinado 'Abrigo por Id: localhost:3000/api/abrigo/:id
-router.delete('/abrigo/:id', abrigoController.deleteAbrigoById);
+router.delete('/abrigo/:id_abrigo', abrigoController.deleteAbrigoById);
 
 module.exports = router;

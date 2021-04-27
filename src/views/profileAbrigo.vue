@@ -112,6 +112,7 @@
     import firebase from 'firebase'
     import db from '../components/firebaseInit'
     import Navbar from '@/components/Navbar'
+    import Api from '../Api';
     var treco = firebase.auth().currentUser
 
 
@@ -133,42 +134,39 @@
 
       created(){
       var user = firebase.auth().currentUser
-      db.collection('abrigo')
-                    .doc(user.uid)
-                    .get()
-                    .then(snapshot => {
-                        const document = snapshot.data()
-                        this.nome = document.nome;
-                        this.email = document.email;
-                        this.telefone = document.telefone;
-						this.endereco = document.endereco;
-                        this.media = document.media;
-                        this.countAvaliacoes = document.countAvaliacoes;
-                        console.log(snapshot.data().nome)
-                    })
-
-                
-            
-            
-        },
+      const id_abrigo = user.uid;
+      const responseAbrigo = Api().get(`/abrigo/${id_abrigo}`);
+      responseAbrigo.then((value) => {
+          this.nome = value.data.nome_abrigo
+          this.email = value.data.email_abrigo
+          this.telefone = value.data.telefone_abrigo
+          this.endereco = value.data.endereco_abrigo
+          this.media = value.data.nota_media
+        });            
+    },
 
         methods:{
-            deleteUser(){
-                 if(confirm('Tem certeza?')){
+            deleteUser: async function(){
+                if(confirm('Tem certeza?')){
                 var user = firebase.auth().currentUser;
                 var userEmail = firebase.auth().currentUser.email;
+                var id_abrigo = firebase.auth().currentUser.uid
                 db.collection("abrigo")
-          .where("id_abrigo", "==", user.uid)
-          .get()
-          .then(querySnapshot => {
-            querySnapshot.forEach(doc => {
-              doc.ref.delete();
-            });
-          });
+                    .where("id_abrigo", "==", user.uid)
+                    .get()
+                    .then(querySnapshot => {
+                        querySnapshot.forEach(doc => {
+                        doc.ref.delete();
+                        });
+                    });
                 user.delete().then((user) =>{
-                    alert(`A conta de ${userEmail} foi excluída!`);
-                    this.$router.replace('login')
-                    location.reload();
+                    const responseAbrigo = Api().delete(`/abrigo/${id_abrigo}`);
+                    responseAbrigo.then((userDeleted) =>{
+                        alert(`A conta de ${userEmail} foi excluída!`);
+                        this.$router.replace('login')
+                        location.reload();
+
+                    })
                 }).catch(function(error) {
 
                 });
