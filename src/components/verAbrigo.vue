@@ -297,6 +297,14 @@ firebase.auth().onAuthStateChanged((user) => {
                 id_abrigo: this.id_abrigo
             }
             const responseSeguidor = await Api().post('/seguidor', seguidor);
+            var seguidorLog = {
+                idUsuario: usuarioLogado.uid,
+                nomeUsuario: usuarioLogado.displayName,
+                idAbrigo: this.id_abrigo,
+                nomeAbrigo: this.nome,
+                operacao: "Seguir",
+            }
+            const responseLog = await Api().post('/seguidorLog', seguidorLog)
             this.seguiu = true;
             this.$router.push("../listaEventos")
             }
@@ -312,9 +320,7 @@ firebase.auth().onAuthStateChanged((user) => {
             this.seguiu = true;
             this.$router.push("../listaEventos")
             }
-        },
-
-        
+        },        
 
         avaliarAbrigo: function(nota){
             this.media = (this.media*this.countAvaliacoes+nota)/(this.countAvaliacoes+1)

@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const LogSeguidorSchema = new mongoose.Schema(
   {
     idUsuario: {
-      type: Number,
+      type: String,
       required: true
     },
     nomeUsuario: {
@@ -11,7 +11,7 @@ const LogSeguidorSchema = new mongoose.Schema(
       required: true
     },
     idAbrigo: {
-      type: Number,
+      type: String,
       required: true
     },
     nomeAbrigo: {

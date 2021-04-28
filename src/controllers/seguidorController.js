@@ -1,4 +1,5 @@
 const db = require("../db");
+const LogSeguidor = require("../model/LogSeguidor")
 
 //create seguidor
 exports.createSeguidor = async (req, res) => {
@@ -21,6 +22,12 @@ exports.createSeguidor = async (req, res) => {
     });
   }
 };
+
+exports.store = async (req, res) => {
+    const data = await LogSeguidor.create(req.body);
+    return res.json(data);
+  }
+
 
 //get all seguidores
 exports.listAllSeguidores = async (req, res) => {
