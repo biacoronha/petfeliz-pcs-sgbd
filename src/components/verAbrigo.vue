@@ -147,7 +147,7 @@
             </ul>
             <div class="center-align">
             <br>
-            <button @click="seguirAbrigo" class="btn blue">Seguir Abrigo</button>
+            <button @click="seguirAbrigo" class="btn blue" id="btn_seguir" >Seguir Abrigo</button>
             <br> <br>
             </div>
         
@@ -159,6 +159,8 @@
     import firebase from 'firebase'
     import db from '../components/firebaseInit'
     import Navbar from '@/components/Navbar'
+    import Api from '../Api';
+
     var treco = firebase.auth().currentUser
 
     $(document).ready(function(){
@@ -177,34 +179,51 @@
             media: 0,
             countAvaliacoes: null,
             id_abrigo: null,
-            voted:null
+            voted:null,
+            seguiu: false
            };
         },
 
         
 
  beforeRouteEnter(to, from, next) {
-    db.collection("abrigo")
-      .where("id_abrigo", "==", to.params.id)
-      .get()
-      .then(querySnapshot => {
-        querySnapshot.forEach(doc => {
-          next(vm => {
-            vm.nome = doc.data().nome;
-            vm.telefone = doc.data().telefone;
-            vm.endereco = doc.data().endereco;
-            vm.media = doc.data().media;
-            vm.countAvaliacoes = doc.data().countAvaliacoes;
-            vm.email = doc.data().email;     
-            vm.id_abrigo = doc.data().id_abrigo
+    var user = firebase.auth().currentUser
+    if(user){
+      const id_abrigo = to.params.id_abrigo;
+      const responseAbrigo = Api().get(`/abrigo/${id_abrigo}`);
+      responseAbrigo.then((value) => {
+        next(vm => {
+          const abrigo = value.data;
+          vm.id_abrigo = id_abrigo
+          vm.nome = abrigo.nome_abrigo
+          vm.email = abrigo.email_abrigo
+          vm.telefone = abrigo.telefone_abrigo
+          vm.endereco = abrigo.endereco_abrigo
+          vm.media = abrigo.nota_media
+        });
+      });
+    }
+    // db.collection("abrigo")
+    //   .where("id_abrigo", "==", to.params.id)
+    //   .get()
+    //   .then(querySnapshot => {
+    //     querySnapshot.forEach(doc => {
+    //       next(vm => {
+    //         vm.nome = doc.data().nome;
+    //         vm.telefone = doc.data().telefone;
+    //         vm.endereco = doc.data().endereco;
+    //         vm.media = doc.data().media;
+    //         vm.countAvaliacoes = doc.data().countAvaliacoes;
+    //         vm.email = doc.data().email;     
+    //         vm.id_abrigo = doc.data().id_abrigo
             
             
 
-          });
-        });
-      }
+    //       });
+    //     });
+    //   }
       
-      );
+    //   );
       
         
   },
@@ -212,128 +231,112 @@
 watch: {
     $route: "fetchData"
     
-  },
+},
 
-  created() {
-       $(document).ready(function(){
-    $('select').formSelect();
-  });
+created() {
+    $(document).ready(function(){
+$('select').formSelect();
+});
     
-    firebase.auth().onAuthStateChanged((user) => {
-      
-        console.log(this.nome)
-      if(user){
-        
-        db.collection("usuario").doc(firebase.auth().currentUser.uid).collection("votosAbrigo")
-        .where("nomeAbrigo", "==", this.nome)
-        .get()
-        .then(querySnapshot => {
-          querySnapshot.forEach(doc => {               
-          if(doc.exists){ 
-            console.log("Usuario Já Votou")
-              this.voted = true;
-          }
-        });
-          
-              })
+firebase.auth().onAuthStateChanged((user) => {
 
-
-            
-      }
+    var btnSeguir = document.getElementById("btn_seguir");
+    const id_usuario = firebase.auth().currentUser.uid;
+    const responseSeguidor = Api().get(`/seguidor/${id_usuario}/${this.id_abrigo}`);
+    responseSeguidor.catch(erro => {
+        btnSeguir.disabled = true;
     })
-
-
-    },
-
-        methods:{
-
-            fetchData() {
-      db.collection("abrigo")
-        .where("id_abrigo", "==", this.$route.params.id)
-        .get()
-        .then(querySnapshot => {
-          querySnapshot.forEach(doc => {
-            this.nome = doc.data().nome;
-            this.telefone = doc.data().telefone;
-            this.endereco = doc.data().endereco;
-            this.media = doc.data().media;
-            this.countAvaliacoes = doc.data().countAvaliacoes;
-            this.email = doc.data().email;
-            this.id_abrigo = doc.data().id_abrigo
-          });
-        });
-    },
-
-            seguirAbrigo(){
-                if(confirm("Deseja seguir esse Abrigo?")){
-                var usuarioLogado = firebase.auth().currentUser
-                
-                console.log(this.id_abrigo)
-                    db.collection("abrigo")
-                    .where("id_abrigo", "==", this.id_abrigo)
-                    .get()
-                    .then(querySnapshot => {
-                        querySnapshot.forEach(doc => {
-                            db.collection("abrigo").doc(this.id_abrigo).collection("seguidores").doc(usuarioLogado.uid).set({
-                            emailSeguidor : usuarioLogado.email,
-                            idSeguidor : usuarioLogado.uid
-                            });
-                        });
-                    }).then(
-                        db.collection("abrigo")
-                        .where("id_abrigo", "==", this.id_abrigo)
-                        .get()
-                        .then(querySnapshot => {
-                            querySnapshot.forEach(doc => {
-                            this.id_abrigo = doc.data().id_abrigo;            
-                            this.abrigoRealizador = doc.data().abrigoRealizador;
-                            db.collection("usuario").doc(usuarioLogado.uid).collection("inscricoes").doc(this.id_abrigo).set({
-                                nomeSeguido : this.nome,
-                                idSeguido : this.id_abrigo
-                            });
-                            this.$router.push("../listaEventos");
-                            });
-                        })
-                    )
-                
-                }
-            },
-
-            
-
-            avaliarAbrigo: function(nota){
-                this.media = (this.media*this.countAvaliacoes+nota)/(this.countAvaliacoes+1)
-                this.countAvaliacoes++;
-                this.voted = true;
-                
-                    
-                db.collection('abrigo').where('email','==',this.email).get().then(querySnapshot => {
-                    querySnapshot.forEach(doc => {
-                        doc.ref.update({
-                            media:this.media,
-                            countAvaliacoes:this.countAvaliacoes
-                        })
-                    })
-                }) 	
-                console.log(this.nome)
-                db.collection("abrigo")
-        .where("nome", "==", this.nome)
-        .get()
-        .then(querySnapshot => {
-          querySnapshot.forEach(doc => {    
-              db.collection("usuario").doc(firebase.auth().currentUser.uid).collection("votosAbrigo").doc(doc.id).set({
-                voto: nota,
-                nomeAbrigo : this.nome
-                });
-            
-        });
-              })
-                this.$forceUpdate();
-                
-                return this.media;
-            },
-
-
+    
+    console.log(this.nome)
+    if(user){
+    
+    db.collection("usuario").doc(firebase.auth().currentUser.uid).collection("votosAbrigo")
+    .where("nomeAbrigo", "==", this.nome)
+    .get()
+    .then(querySnapshot => {
+        querySnapshot.forEach(doc => {               
+        if(doc.exists){ 
+        console.log("Usuario Já Votou")
+            this.voted = true;
         }
+    });
+        
+            })
+
+
+        
+    }
+})
+
+
+},
+
+    methods:{
+        fetchData() {
+            var user = firebase.auth().currentUser
+            if(user){
+                const id_abrigo = this.$route.params.id_abrigo;
+                const responseAbrigo = Api().get(`/abrigo/${id_abrigo}`);
+                responseAbrigo.then((value) => {
+                const abrigo = value.data;
+                this.id_abrigo = id_abrigo
+                this.nome = abrigo.nome_abrigo
+                this.email = abrigo.email_abrigo
+                this.telefone = abrigo.telefone_abrigo
+                this.endereco = abrigo.endereco_abrigo
+                this.media = abrigo.nota_media
+            });
+         }
+},
+
+        seguirAbrigo: async function(){
+            if(confirm("Deseja seguir esse Abrigo?")){
+            var usuarioLogado = firebase.auth().currentUser
+            var seguidor = {
+                id_usuario: usuarioLogado.uid,
+                id_abrigo: this.id_abrigo
+            }
+            const responseSeguidor = await Api().post('/seguidor', seguidor);
+            this.seguiu = true;
+            this.$router.push("../listaEventos")
+            }
+        },
+
+        
+
+        avaliarAbrigo: function(nota){
+            this.media = (this.media*this.countAvaliacoes+nota)/(this.countAvaliacoes+1)
+            this.countAvaliacoes++;
+            this.voted = true;
+            
+                
+            db.collection('abrigo').where('email','==',this.email).get().then(querySnapshot => {
+                querySnapshot.forEach(doc => {
+                    doc.ref.update({
+                        media:this.media,
+                        countAvaliacoes:this.countAvaliacoes
+                    })
+                })
+            }) 	
+            console.log(this.nome)
+            db.collection("abrigo")
+    .where("nome", "==", this.nome)
+    .get()
+    .then(querySnapshot => {
+        querySnapshot.forEach(doc => {    
+            db.collection("usuario").doc(firebase.auth().currentUser.uid).collection("votosAbrigo").doc(doc.id).set({
+            voto: nota,
+            nomeAbrigo : this.nome
+            });
+        
+    });
+            })
+            this.$forceUpdate();
+            
+            return this.media;
+        },
+
+
+    }
     }
 </script>

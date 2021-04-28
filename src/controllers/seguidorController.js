@@ -37,10 +37,10 @@ exports.listAllSeguidores = async (req, res) => {
 
 //get one seguidor by id
 exports.findSeguidorById = async (req, res) => {
-  const { id } = req.params;
+  const { id_usuario, id_abrigo } = req.params;
   try {
-    const { rows } = await db.query(`SELECT * FROM seguidor WHERE id_usuario = $1`,
-      [id]
+    const { rows } = await db.query(`SELECT * FROM seguidor WHERE id_usuario = $1 and id_abrigo = $2`,
+      [id_usuario, id_abrigo]
     );
     if (!rows.length) {
       throw 'seguidor_not_found';

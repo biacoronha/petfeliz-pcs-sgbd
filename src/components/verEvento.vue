@@ -13,7 +13,7 @@
       <li class="collection-item">Latitude do local do Evento: {{lat}} </li>
       <li class="collection-item">Longitude do local do Evento: {{long}} </li>
       <li class="collection-item">Evento Realizador: {{abrigoRealizador}}<br><br>
-      <router-link v-bind:to="{name: 'verAbrigo', params:{id:id_abrigo}}" class="btn blue"> Página do Abrigo Realizador </router-link> <br> <br>
+      <router-link v-bind:to="{name: 'verAbrigo', params:{id_abrigo:id_abrigo}}" class="btn blue"> Página do Abrigo Realizador </router-link> <br> <br>
       <button @click="seguirAbrigo" class="btn blue">Seguir Evento</button></li>
 
       <li class="collection-item"> <button class="btn red" @click="desconfirmarPresenca" v-if="usuarioEstaConfirmado"> Cancelar Confirmação </button>
