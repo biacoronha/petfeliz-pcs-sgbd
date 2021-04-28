@@ -243,7 +243,7 @@ firebase.auth().onAuthStateChanged((user) => {
     var btnSeguir = document.getElementById("btn_seguir");
     const id_usuario = firebase.auth().currentUser.uid;
     const responseSeguidor = Api().get(`/seguidor/${id_usuario}/${this.id_abrigo}`);
-    responseSeguidor.catch(erro => {
+    responseSeguidor.then(erro => {
         btnSeguir.disabled = true;
     })
     
@@ -291,6 +291,18 @@ firebase.auth().onAuthStateChanged((user) => {
 
         seguirAbrigo: async function(){
             if(confirm("Deseja seguir esse Abrigo?")){
+            var usuarioLogado = firebase.auth().currentUser
+            var seguidor = {
+                id_usuario: usuarioLogado.uid,
+                id_abrigo: this.id_abrigo
+            }
+            const responseSeguidor = await Api().post('/seguidor', seguidor);
+            this.seguiu = true;
+            this.$router.push("../listaEventos")
+            }
+        },
+        deixarSeguir: async function(){
+            if(confirm("Deseja deixar de seguir esse Abrigo?")){
             var usuarioLogado = firebase.auth().currentUser
             var seguidor = {
                 id_usuario: usuarioLogado.uid,

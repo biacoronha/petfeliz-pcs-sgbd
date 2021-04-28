@@ -14,7 +14,6 @@
       <li class="collection-item">Longitude do local do Evento: {{long}} </li>
       <li class="collection-item">Evento Realizador: {{abrigoRealizador}}<br><br>
       <router-link v-bind:to="{name: 'verAbrigo', params:{id_abrigo:id_abrigo}}" class="btn blue"> Página do Abrigo Realizador </router-link> <br> <br>
-      <button @click="seguirAbrigo" class="btn blue">Seguir Evento</button></li>
 
       <li class="collection-item"> <button class="btn red" @click="desconfirmarPresenca" v-if="usuarioEstaConfirmado"> Cancelar Confirmação </button>
         <button v-else class="btn green" @click="confirmarPresenca"> Confirmar Presença </button>
@@ -366,45 +365,6 @@ export default {
             
           });
         });
-    },
-
-    seguirAbrigo(){
-        if(confirm("Deseja seguir esse Evento?")){
-          usuarioLogado = firebase.auth().currentUser
-          
-          if(usuarioLogado){
-             db.collection("eventos")
-        .where("id_abrigo", "==", this.$route.params.id_abrigo)
-        .get()
-        .then(querySnapshot => {
-          querySnapshot.forEach(doc => {
-            this.id_abrigo = doc.data().id_abrigo;
-
-            db.collection("abrigo").doc(this.id_abrigo).collection("seguidores").doc(usuarioLogado.uid).set({
-              emailSeguidor : usuarioLogado.email,
-              idSeguidor : usuarioLogado.uid
-            });
-        });
-            }).then(
-                 db.collection("eventos")
-        .where("id_abrigo", "==", this.$route.params.id_abrigo)
-        .get()
-        .then(querySnapshot => {
-          querySnapshot.forEach(doc => {
-            this.id_abrigo = doc.data().id_abrigo;            
-            this.abrigoRealizador = doc.data().abrigoRealizador;
-              db.collection("usuario").doc(usuarioLogado.uid).collection("inscricoes").doc(this.id_abrigo).set({
-                nomeSeguido : this.abrigoRealizador,
-                idSeguido : this.id_abrigo
-                });
-                this.$router.push("../listaEventos");
-        });
-              })
-            )
-
-          }
-
-        }
     },
 
     getPosition: function(){
