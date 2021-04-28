@@ -1,13 +1,25 @@
 const mongoose = require("mongoose");
 
-const HamburgerSchema = new mongoose.Schema(
+const LogVotoEventoSchema = new mongoose.Schema(
   {
-    name: {
+    idUsuario: {
+      type: Number,
+      required: true
+    },
+    nomeUsuario: {
       type: String,
       required: true
     },
-    price: {
+    idEvento: {
       type: Number,
+      required: true
+    },
+    nomeEvento: {
+      type: String,
+      required: true
+    },
+    nota: {
+      type: String,
       required: true
     }
   },
@@ -16,4 +28,4 @@ const HamburgerSchema = new mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model("Hamburger", HamburgerSchema);
+module.exports = mongoose.model("LogVotoEvento", LogVotoEventoSchema);
