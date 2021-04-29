@@ -148,7 +148,7 @@
             <div class="center-align">
             <br>
             <button @click="seguirAbrigo" class="btn blue" id="btn_seguir" >Seguir Abrigo</button><br><br>
-            <button v-if="seguiu" @click="deixarSeguir" class="btn red" id="btn_seguir_red">Deixar de Seguir</button>
+            <button @click="deixarSeguir" class="btn red" id="btn_seguir_red" disabled="true">Deixar de Seguir</button>
             <br> <br>
             </div>
         
@@ -218,11 +218,13 @@ $('select').formSelect();
 firebase.auth().onAuthStateChanged((user) => {
 
     var btnSeguir = document.getElementById("btn_seguir");
+    var btnDeixarSeguir = document.getElementById("btn_seguir_red")
     const id_usuario = firebase.auth().currentUser.uid;
     const responseSeguidor = Api().get(`/seguidor/${id_usuario}/${this.id_abrigo}`);
     responseSeguidor.then(value => {
-        btnSeguir.disabled = true;
-        this.seguiu = true
+        this.seguiu = true;
+        btnSeguir.disabled = true;    
+        btnDeixarSeguir.disabled = false;    
     })
     console.log(this.nome)
 
@@ -272,8 +274,8 @@ firebase.auth().onAuthStateChanged((user) => {
                 operacao: "Seguir",
             }
             const responseLog = await Api().post('/seguidorLog', seguidorLog)
-            this.seguiu = true;
             this.$router.push("../listaEventos")
+            this.seguiu = true;            
             }
         },
         deixarSeguir: async function(){
