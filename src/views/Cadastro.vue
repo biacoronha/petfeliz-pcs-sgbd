@@ -89,7 +89,8 @@
                 nome_abrigo: this.nome,
                 email_abrigo: this.email,
                 telefone_abrigo: this.telefone,
-                endereco_abrigo: this.endereco
+                endereco_abrigo: this.endereco,
+                nota: 0
                 };
                  const response = await Api().post('/abrigo', abrigo);
                  return response.data;

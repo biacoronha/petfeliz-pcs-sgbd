@@ -2,16 +2,16 @@ const db = require("../db");
 
 //create abrigo
 exports.createAbrigo = async (req, res) => {
-  const { id_abrigo, nome_abrigo, email_abrigo, telefone_abrigo, endereco_abrigo } = req.body;
+  const { id_abrigo, nome_abrigo, email_abrigo, telefone_abrigo, endereco_abrigo, nota } = req.body;
   try {
     const { rows } = await db.query(
-      "INSERT INTO abrigo (id_abrigo, nome_abrigo, email_abrigo, telefone_abrigo, endereco_abrigo) VALUES ($1, $2, $3, $4, $5 )",
+      "INSERT INTO abrigo (id_abrigo, nome_abrigo, email_abrigo, telefone_abrigo, endereco_abrigo, nota) VALUES ($1, $2, $3, $4, $5, $6 )",
       [id_abrigo, nome_abrigo, email_abrigo, telefone_abrigo, endereco_abrigo]
     );
     res.status(201).send({
       message: "Abrigo added successfully!",
       body: {
-        abrigo: { id_abrigo, nome_abrigo, email_abrigo, telefone_abrigo, endereco_abrigo },
+        abrigo: { id_abrigo, nome_abrigo, email_abrigo, telefone_abrigo, endereco_abrigo, nota },
       },
     });
   } catch (error) {
@@ -62,16 +62,17 @@ exports.findAbrigoById = async (req, res) => {
 
 //update abrigo by id
 exports.updateAbrigoById = async (req, res) => {
-  const { id } = req.params;
+  const { id_abrigo } = req.params;
   try {
-    const { nome_abrigo, email_abrigo, telefone_abrigo, endereco_abrigo } = req.body;
+    const { nome_abrigo, email_abrigo, telefone_abrigo, endereco_abrigo, nota_media } = req.body;
     const { rows } = await db.query(`UPDATE abrigo 
                                     SET nome_abrigo = $1, 
                                     email_abrigo = $2, 
                                     telefone_abrigo = $3, 
                                     endereco_abrigo = $4, 
-                                    WHERE id_abrigo = $5`,
-      [nome_abrigo, email_abrigo, telefone_abrigo, endereco_abrigo, id]
+                                    nota_media = $5
+                                    WHERE id_abrigo = $6`,
+      [nome_abrigo, email_abrigo, telefone_abrigo, endereco_abrigo, nota_media, id_abrigo]
     );
     res.status(200).send({ message: "Abrigo Updated Successfully!" });
   } catch (error) {

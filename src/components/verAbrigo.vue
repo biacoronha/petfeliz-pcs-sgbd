@@ -179,8 +179,7 @@
             media: 0,
             countAvaliacoes: null,
             id_abrigo: null,
-            voted:null,
-            seguiu: false
+            voted:null
            };
         },
 
@@ -202,30 +201,7 @@
           vm.media = abrigo.nota_media
         });
       });
-    }
-    // db.collection("abrigo")
-    //   .where("id_abrigo", "==", to.params.id)
-    //   .get()
-    //   .then(querySnapshot => {
-    //     querySnapshot.forEach(doc => {
-    //       next(vm => {
-    //         vm.nome = doc.data().nome;
-    //         vm.telefone = doc.data().telefone;
-    //         vm.endereco = doc.data().endereco;
-    //         vm.media = doc.data().media;
-    //         vm.countAvaliacoes = doc.data().countAvaliacoes;
-    //         vm.email = doc.data().email;     
-    //         vm.id_abrigo = doc.data().id_abrigo
-            
-            
-
-    //       });
-    //     });
-    //   }
-      
-    //   );
-      
-        
+    }        
   },
 
 watch: {
@@ -243,28 +219,17 @@ firebase.auth().onAuthStateChanged((user) => {
     var btnSeguir = document.getElementById("btn_seguir");
     const id_usuario = firebase.auth().currentUser.uid;
     const responseSeguidor = Api().get(`/seguidor/${id_usuario}/${this.id_abrigo}`);
-    responseSeguidor.then(erro => {
+    responseSeguidor.then(value => {
         btnSeguir.disabled = true;
     })
-    
     console.log(this.nome)
+
     if(user){
-    
-    db.collection("usuario").doc(firebase.auth().currentUser.uid).collection("votosAbrigo")
-    .where("nomeAbrigo", "==", this.nome)
-    .get()
-    .then(querySnapshot => {
-        querySnapshot.forEach(doc => {               
-        if(doc.exists){ 
-        console.log("Usuario Já Votou")
+        const responseVoto = Api().get(`/votoAbrigo/${id_usuario}`);
+        responseVoto.then(value => {
+            console.log("Usuario Já Votou")
             this.voted = true;
-        }
-    });
-        
-            })
-
-
-        
+        })        
     }
 })
 
@@ -297,7 +262,6 @@ firebase.auth().onAuthStateChanged((user) => {
                 id_abrigo: this.id_abrigo
             }
             const responseSeguidor = await Api().post('/seguidor', seguidor);
-            this.seguiu = true;
             this.$router.push("../listaEventos")
             }
         },
@@ -309,40 +273,33 @@ firebase.auth().onAuthStateChanged((user) => {
                 id_abrigo: this.id_abrigo
             }
             const responseSeguidor = await Api().post('/seguidor', seguidor);
-            this.seguiu = true;
             this.$router.push("../listaEventos")
             }
         },
 
         
 
-        avaliarAbrigo: function(nota){
-            this.media = (this.media*this.countAvaliacoes+nota)/(this.countAvaliacoes+1)
-            this.countAvaliacoes++;
-            this.voted = true;
-            
-                
-            db.collection('abrigo').where('email','==',this.email).get().then(querySnapshot => {
-                querySnapshot.forEach(doc => {
-                    doc.ref.update({
-                        media:this.media,
-                        countAvaliacoes:this.countAvaliacoes
-                    })
-                })
-            }) 	
-            console.log(this.nome)
-            db.collection("abrigo")
-    .where("nome", "==", this.nome)
-    .get()
-    .then(querySnapshot => {
-        querySnapshot.forEach(doc => {    
-            db.collection("usuario").doc(firebase.auth().currentUser.uid).collection("votosAbrigo").doc(doc.id).set({
-            voto: nota,
-            nomeAbrigo : this.nome
-            });
-        
-    });
-            })
+        avaliarAbrigo: async function(nota){
+            var usuarioLogado = firebase.auth().currentUser
+            var id_usuario = usuarioLogado.uid
+            var id_abrigo = this.id_abrigo
+            var votoAbrigo = {
+                id_usuario: id_usuario,
+                id_abrigo: id_abrigo,
+                nota: nota
+            }
+            const responseVotoAbrigo = await Api().post('/votoAbrigo', votoAbrigo); 
+            const responseMedia = await Api().get(`/votoAbrigo/media/${id_abrigo}`); 
+            this.media = responseMedia.data.media
+            var abrigo = {
+                nome_abrigo: this.nome,
+                email_abrigo: this.email,
+                telefone_abrigo: this.telefone,
+                endereco_abrigo: this.endereco,
+                nota_media: this.media
+                };
+            const responseAbrigo = await Api().put(`/abrigo/${id_abrigo}`, abrigo); 
+
             this.$forceUpdate();
             
             return this.media;

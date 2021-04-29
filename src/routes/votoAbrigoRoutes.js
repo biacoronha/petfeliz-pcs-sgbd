@@ -10,9 +10,12 @@ router.post('/votoAbrigo', votoAbrigoController.createVotoAbrigo);
 router.get('/votoAbrigo', votoAbrigoController.listAllVotosAbrigo);
 
 // ==> Rota responsável por listar um determinado 'VotoAbrigo' por Id: (GET): localhost:3000/api/votoAbrigo/:id
-router.get('/votoAbrigo/:id', votoAbrigoController.findVotoAbrigoById)
+router.get('/votoAbrigo/:id_usuario', votoAbrigoController.findVotoAbrigoById)
 
 // ==> Rota responsável por deletar/excluir um determinado 'VotoAbrigo por Id: localhost:3000/api/votoAbrigo/:id
 router.delete('/votoAbrigo/:id', votoAbrigoController.deleteVotoAbrigoById);
+
+// ==> Rota responsável por retornar a media de um determinado abrigo: (GET): localhost:3000/api/votoAbrigo/media/:id_usuario
+router.get('/votoAbrigo/media/:id_usuario', votoAbrigoController.getMedia);
 
 module.exports = router;

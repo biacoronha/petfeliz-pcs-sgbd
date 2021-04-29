@@ -6,7 +6,7 @@ exports.createVotoAbrigo = async (req, res) => {
   try {
     const { rows } = await db.query(
       "INSERT INTO voto_abrigo (id_usuario , id_abrigo, nota) VALUES ($1, $2, $3)",
-      [id_usuario , id_abrigo]
+      [id_usuario , id_abrigo, nota]
     );
     res.status(201).send({
       message: "VotoAbrigo added successfully!",
@@ -37,10 +37,10 @@ exports.listAllVotosAbrigo = async (req, res) => {
 
 //get one votoAbrigo by id
 exports.findVotoAbrigoById = async (req, res) => {
-  const { id } = req.params;
+  const { id_usuario } = req.params;
   try {
-    const { rows } = await db.query(`SELECT * FROM voto_abrigo WHERE id_abrigo = $1`,
-      [id]
+    const { rows } = await db.query(`SELECT * FROM voto_abrigo WHERE id_usuario = $1`,
+      [id_usuario]
     );
     if (!rows.length) {
       throw 'votoAbrigo_not_found';
@@ -68,6 +68,23 @@ exports.deleteVotoAbrigoById = async (req, res) => {
     res.status(200).send({ message: "VotoAbrigo deleted successfully!" });
   } catch (error) {
     console.error('deleteVotoAbrigoById', error);
+    res.status(500).send({
+      message: "Ocorreu um erro."
+    });
+  }
+};
+
+//get media
+exports.getMedia = async (req, res) => {
+  const { id_abrigo} = req.params;
+  try {
+    const { rows } = await db.query(
+      "SELECT sum(nota)/count(nota) as media FROM voto_abrigo WHERE id_abrigo = $1",
+      [ id_abrigo]
+    );
+    res.status(200).send(rows[0]);
+  } catch (error) {
+    console.error('createVotoAbrigo', error);
     res.status(500).send({
       message: "Ocorreu um erro."
     });
