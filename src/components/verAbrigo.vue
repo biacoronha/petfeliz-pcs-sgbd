@@ -147,7 +147,8 @@
             </ul>
             <div class="center-align">
             <br>
-            <button @click="seguirAbrigo" class="btn blue" id="btn_seguir" >Seguir Abrigo</button>
+            <button @click="seguirAbrigo" class="btn blue" id="btn_seguir" >Seguir Abrigo</button><br><br>
+            <button v-if="seguiu" @click="deixarSeguir" class="btn red" id="btn_seguir_red">Deixar de Seguir</button>
             <br> <br>
             </div>
         
@@ -221,6 +222,7 @@ firebase.auth().onAuthStateChanged((user) => {
     const responseSeguidor = Api().get(`/seguidor/${id_usuario}/${this.id_abrigo}`);
     responseSeguidor.then(value => {
         btnSeguir.disabled = true;
+        this.seguiu = true
     })
     console.log(this.nome)
 
@@ -262,22 +264,36 @@ firebase.auth().onAuthStateChanged((user) => {
                 id_abrigo: this.id_abrigo
             }
             const responseSeguidor = await Api().post('/seguidor', seguidor);
+            var seguidorLog = {
+                idUsuario: usuarioLogado.uid,
+                nomeUsuario: usuarioLogado.displayName,
+                idAbrigo: this.id_abrigo,
+                nomeAbrigo: this.nome,
+                operacao: "Seguir",
+            }
+            const responseLog = await Api().post('/seguidorLog', seguidorLog)
+            this.seguiu = true;
             this.$router.push("../listaEventos")
             }
         },
         deixarSeguir: async function(){
             if(confirm("Deseja deixar de seguir esse Abrigo?")){
             var usuarioLogado = firebase.auth().currentUser
-            var seguidor = {
-                id_usuario: usuarioLogado.uid,
-                id_abrigo: this.id_abrigo
+               var id_usuario = usuarioLogado.uid
+               var id_abrigo = this.id_abrigo
+            const responseSeguidor = await Api().delete(`/seguidor/${id_usuario}/${id_abrigo}`);
+            var seguidorLog = {
+                idUsuario: usuarioLogado.uid,
+                nomeUsuario: usuarioLogado.displayName,
+                idAbrigo: this.id_abrigo,
+                nomeAbrigo: this.nome,
+                operacao: "Deixar de Seguir",
             }
-            const responseSeguidor = await Api().post('/seguidor', seguidor);
+            const responseLog = await Api().post('/seguidorLog', seguidorLog)            
+            this.seguiu = false;
             this.$router.push("../listaEventos")
             }
-        },
-
-        
+        },        
 
         avaliarAbrigo: async function(nota){
             var usuarioLogado = firebase.auth().currentUser

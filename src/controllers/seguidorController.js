@@ -1,4 +1,5 @@
 const db = require("../db");
+const LogSeguidor = require("../model/LogSeguidor")
 
 //create seguidor
 exports.createSeguidor = async (req, res) => {
@@ -21,6 +22,28 @@ exports.createSeguidor = async (req, res) => {
     });
   }
 };
+
+//delete seguidor by id + id_abrigo
+exports.deleteSeguidorById = async (req, res) => {
+  const { id_usuario , id_abrigo } = req.params;
+  try {
+   await db.query("DELETE FROM seguidor WHERE id_usuario = $1 AND id_abrigo = $2", 
+    [id_usuario , id_abrigo]
+    );
+    res.status(200).send({ message: "Seguidor deleted successfully!" + id_usuario + " " + id_abrigo });
+  } catch (error) {
+    console.error('deleteSeguidorById', error);
+    res.status(500).send({
+      message: error,
+    });
+  }
+};
+
+exports.store = async (req, res) => {
+    const data = await LogSeguidor.create(req.body);
+    return res.json(data);
+  }
+
 
 //get all seguidores
 exports.listAllSeguidores = async (req, res) => {
@@ -60,16 +83,3 @@ exports.findSeguidorById = async (req, res) => {
   }
 };
 
-//delete seguidor by id
-exports.deleteSeguidorById = async (req, res) => {
-  const { id_usuario , id_abrigo } = req.params;
-  try {
-    await db.query("DELETE FROM seguidor WHERE id_usuario = $1, id_abrigo = $2", [id_usuario , id_abrigo]);
-    res.status(200).send({ message: "Seguidor deleted successfully!" });
-  } catch (error) {
-    console.error('deleteSeguidorById', error);
-    res.status(500).send({
-      message: "Ocorreu um erro."
-    });
-  }
-};

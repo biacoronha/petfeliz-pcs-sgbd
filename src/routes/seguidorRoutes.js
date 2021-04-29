@@ -13,6 +13,8 @@ router.get('/seguidor', seguidorController.listAllSeguidores);
 router.get('/seguidor/:id_usuario/:id_abrigo', seguidorController.findSeguidorById)
 
 // ==> Rota responsável por deletar/excluir um determinado 'Seguidor por Id: localhost:3000/api/seguidor/:id
-router.delete('/seguidor/:id', seguidorController.deleteSeguidorById);
+router.delete('/seguidor/:id_usuario/:id_abrigo', seguidorController.deleteSeguidorById);
+
+router.post("/seguidorLog", seguidorController.store);
 
 module.exports = router;
