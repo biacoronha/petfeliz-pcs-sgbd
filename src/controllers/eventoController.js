@@ -5,7 +5,7 @@ exports.createEvento = async (req, res) => {
   const { nome_evento, data_evento, descricao_evento, local_nome, local_lat, local_long, tipo_evento, nota_media, id_abrigo } = req.body;
   try {
     const { rows } = await db.query(
-      "INSERT INTO evento (nome_evento, data_evento, descricao_evento, local_nome, local_lat, local_long, tipo_evento, nota_media, id_abrigo) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)",
+      "INSERT INTO evento (nome_evento, data_evento, descricao_evento, local_nome, local_lat, local_long, tipo_evento, nota_media, id_abrigo) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)",
       [nome_evento, data_evento, descricao_evento, local_nome, local_lat, local_long, tipo_evento, nota_media, id_abrigo]
     );
     res.status(201).send({
@@ -62,9 +62,9 @@ exports.findEventoById = async (req, res) => {
 
 //update evento by id
 exports.updateEventoById = async (req, res) => {
-  const { id } = req.params;
+  const { id_evento } = req.params;
   try {
-    const { nome_evento, data_evento, descricao_evento, local_nome, local_lat, local_long, tipo_evento, id_abrigo } = req.body;
+    const { nome_evento, data_evento, descricao_evento, local_nome, local_lat, local_long, tipo_evento, nota_media, id_abrigo } = req.body;
     const { rows } = await db.query(`UPDATE evento 
                                     SET nome_evento = $1, 
                                     data_evento = $2, 
@@ -74,8 +74,9 @@ exports.updateEventoById = async (req, res) => {
                                     local_long = $6, 
                                     tipo_evento = $7,
                                     id_abrigo = $8,
-                                    WHERE id_animal = $9`,
-      [nome_evento, data_evento, descricao_evento, local_nome, local_lat, local_long, tipo_evento, id_abrigo, id]
+                                    nota_media = $9
+                                    WHERE id_evento = $10`,
+      [nome_evento, data_evento, descricao_evento, local_nome, local_lat, local_long, tipo_evento, nota_media, id_abrigo, id_evento]
     );
     res.status(200).send({ message: "Evento Updated Successfully!" });
   } catch (error) {
@@ -88,9 +89,9 @@ exports.updateEventoById = async (req, res) => {
 
 //delete evento by id
 exports.deleteEventoById = async (req, res) => {
-  const { id } = req.params;
+  const { id_evento } = req.params;
   try {
-    await db.query("DELETE FROM evento WHERE id_evento = $1", [id]);
+    await db.query("DELETE FROM evento WHERE id_evento = $1", [id_evento]);
     res.status(200).send({ message: "Evento deleted successfully!" });
   } catch (error) {
     console.error('deleteEventoById', error);

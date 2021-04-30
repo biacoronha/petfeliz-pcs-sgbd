@@ -204,6 +204,8 @@
 <script>
 import firebase from "firebase"
 import db from "./firebaseInit"
+import Api from '../Api';
+
 
 var user
 
@@ -246,32 +248,32 @@ export default {
     };
   },
   beforeRouteEnter(to, from, next) {
-    user = firebase.auth().currentUser
-    db.collection("eventos")
-      .where("id_abrigo", "==", to.params.id_abrigo)
-      .get()
-      .then(querySnapshot => {
-        querySnapshot.forEach(doc => {
-          next(vm => {
-            vm.id_abrigo = doc.data().id_abrigo;
-            vm.abrigoRealizador = doc.data().abrigoRealizador;
-            vm.nome = doc.data().nome;
-            vm.descricao = doc.data().descricao;
-            vm.local = doc.data().local;
-            vm.data = doc.data().data;
-            vm.horario = doc.data().horario;
-            vm.tipo = doc.data().tipo;
-            vm.lat = doc.data().lat;
-			vm.long = doc.data().long;
-			vm.media = doc.data().media
+    var user = firebase.auth().currentUser
+    if(user){
+      const id_evento = to.params.id_evento;
+      const responseEvento = Api().get(`/evento/${id_evento}`);
+      responseEvento.then((value) => {
+        next(vm => {
+          const evento = value.data;
+            vm.id_abrigo = evento.id_abrigo;
+            //vm.abrigoRealizador = evento.abrigoRealizador;
+            vm.nome = evento.nome_evento;
+            vm.descricao = evento.descricao_evento;
+            vm.local = evento.local_nome;
+            vm.data = evento.data_evento;
+            vm.horario = evento.horario_evento;
+            vm.tipo = evento.tipo_evento;
+            vm.lat = evento.local_lat;
+            vm.long = evento.local_long;
+            vm.media = evento.nota_media
 
             if(vm.id_abrigo == user.uid){
               vm.usuarioDono = true;
             }
-          });
+
         });
-      }
-      );
+      });
+    }  
   },
   watch: {
     $route: "fetchData"
@@ -346,25 +348,24 @@ export default {
 
   methods: {
     fetchData() {
-      db.collection("eventos")
-        .where("id_abrigo", "==", this.$route.params.id_abrigo)
-        .get()
-        .then(querySnapshot => {
-          querySnapshot.forEach(doc => {
-            this.id_abrigo = doc.data().id_abrigo;
-            this.nome = doc.data().nome;
-            this.descricao = doc.data().descricao;
-            this.local = doc.data().local;
-            this.data = doc.data().data;
-            this.horario = doc.data().horario;
-            this.tipo = doc.data().tipo;
-            this.abrigoRealizador = doc.data().abrigoRealizador;
-            this.lat = doc.data().lat;
-			this.long = doc.data().long;
-      this.media = doc.data().media;
-            
-          });
-        });
+      var user = firebase.auth().currentUser
+      if(user){
+          const id_evento = this.$route.params.id_evento;
+          const responseEvento = Api().get(`/abrigo/${id_evento}`);
+          responseEvento.then((value) => {
+            this.id_abrigo = value.id_abrigo;
+            this.abrigoRealizador = value.abrigoRealizador;
+            this.nome = value.nome;
+            this.descricao = value.descricao;
+            this.local = value.local;
+            this.data = value.data;
+            this.horario = value.horario;
+            this.tipo = evento.tipo_evento;
+            this.lat = value.lat;
+            this.long = value.long;
+            this.media = value.media
+      });
+    }
     },
 
     getPosition: function(){
@@ -374,39 +375,35 @@ export default {
       }
 	},
 
-	avaliarEvento: function(nota){
-		this.media = (this.media*this.countAvaliacoes+nota)/(this.countAvaliacoes+1)
-    this.countAvaliacoes++;
-    this.voted = true;
-		
-		db.collection('eventos').where('nome','==',this.nome).get().then(querySnapshot => {
-            querySnapshot.forEach(doc => {
-            	doc.ref.update({
-          media:this.media,
-          countAvaliacoes:this.countAvaliacoes
-     
-				})
-			})
-    }) 
-    
+	avaliarEvento: async function(nota){
+        var usuarioLogado = firebase.auth().currentUser
+        var id_usuario = usuarioLogado.uid
+        var id_evento = this.id_evento
+        var votoEvento = {
+            id_usuario: id_usuario,
+            id_evento: id_evento,
+            nota: nota
+        }
+        const responseVotoEvento = await Api().post('/votoEvento', votoEvento); 
+        const responseMedia = await Api().get(`/votoEvento/media/${id_evento}`); 
+        this.media = responseMedia.data.media
+        var evento = {
+          nome_evento: this.nome,
+          data_evento: this.data,
+          descricao_evento: this.descricao,
+          local_nome: this.local,
+          local_lat: this.lat,
+          local_long: this.long,
+          tipo_evento: this.selected,
+          nota_media: this.nota,
+          id_abrigo: this.id_abrigo
+        };
+        const responseEvento = await Api().put(`/evento/${id_evento}`, evento); 
 
-    db.collection("eventos")
-        .where("nome", "==", this.nome)
-        .get()
-        .then(querySnapshot => {
-          querySnapshot.forEach(doc => {    
-              db.collection("usuario").doc(firebase.auth().currentUser.uid).collection("votosEvento").doc(doc.id).set({
-                voto: nota,
-                nomeEvento : this.nome
-                });
-            
-        });
-              })
-		
-		this.$forceUpdate();
-		
+        this.$forceUpdate();
 
-		return this.media;
+        return this.media;
+
 	},
 
     confirmarPresenca(){
@@ -477,18 +474,15 @@ export default {
       }
     },
 
-    deletarEvento() {
-      if (confirm("Tem certeza?")) {
-        db.collection("eventos")
-          .where("id_abrigo", "==", this.$route.params.id_abrigo)
-          .get()
-          .then(querySnapshot => {
-            querySnapshot.forEach(doc => {
-              doc.ref.delete();
-              this.$router.push("../listaEventos");
-            });
-          });
+    deletarEvento: async function() {
+      var user = firebase.auth().currentUser
+      if(user){
+      if (confirm("Tem certeza que deseja deletar esse evento?")) {
+        const id_evento = this.$route.params.id_evento;
+        const responseEvento = await Api().delete(`/evento/${id_evento}`);
+         this.$router.push("../listaEventos");
       }
+    }
     }
   }
 };

@@ -15,7 +15,7 @@
              v-bind:key="evento.id_evento" class="collection-item">
              {{evento.nome_evento}}
 
-             <router-link class="secondary-content" v-bind:to="{name: 'verEvento', params:{id_abrigo: evento.id_abrigo}}">
+             <router-link class="secondary-content" v-bind:to="{name: 'verEvento', params:{id_evento: evento.id_evento}}">
                  <i class="fa fa-eye"></i>
              </router-link>
              </li>

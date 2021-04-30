@@ -15,4 +15,7 @@ router.get('/votoEvento/:id', votoEventoController.findVotoEventoById)
 // ==> Rota responsável por deletar/excluir um determinado 'VotoEvento por Id: localhost:3000/api/votoEvento/:id
 router.delete('/votoEvento/:id', votoEventoController.deleteVotoEventoById);
 
+// ==> Rota responsável por retornar a media de um determinado evento: (GET): localhost:3000/api/votoEvento/media/:id_evento
+router.get('/votoAbrigo/media/:id_evento', votoEventoController.getMedia);
+
 module.exports = router;

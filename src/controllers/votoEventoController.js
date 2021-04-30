@@ -73,3 +73,20 @@ exports.deleteVotoEventoById = async (req, res) => {
     });
   }
 };
+
+//get media
+exports.getMedia = async (req, res) => {
+  const { id_evento} = req.params;
+  try {
+    const { rows } = await db.query(
+      "SELECT sum(nota)/count(nota) as media FROM voto_abrigo WHERE id_evento = $1",
+      [ id_evento]
+    );
+    res.status(200).send(rows[0]);
+  } catch (error) {
+    console.error('createVotoAbrigo', error);
+    res.status(500).send({
+      message: "Ocorreu um erro."
+    });
+  }
+};
