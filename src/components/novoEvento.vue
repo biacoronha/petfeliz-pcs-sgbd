@@ -60,7 +60,7 @@
   </div>
     </div>
         <router-link to="/listaEventos" class="btn grey" style="margin-right: 10px">Cancel</router-link>
-        <button type="submit" class="btn" v-bind="getSeguidores"  @click="getSeguidores()">Submit</button>
+        <button type="submit" class="btn">Submit</button>
     </form>
         </div>
 
@@ -72,6 +72,7 @@
 <script>
     import db from './firebaseInit'
     import firebase from 'firebase'
+import Api from '../Api';
     
   $(document).ready(function(){
     $('select').formSelect();
@@ -105,33 +106,29 @@ export default{
 	
 
     methods: {
-        salvarEvento(){
-            db.collection('eventos').add({
-                id_abrigo: firebase.auth().currentUser.uid,
-                nome: this.nome,
-                descricao: this.descricao,
-                local: this.local,
-                data: this.data,
-                horario: this.horario,
-                tipo: this.selected,
-                abrigoRealizador:  firebase.auth().currentUser.email,
-                lat: this.lat,
-				long: this.long,
-				media: this.media,
-				countAvaliacoes: this.countAvaliacoes,
-            })
-            .then( 
-                this.$router.push('/listaEventos')
-            )
-            .catch(error => {
-                console.log(err)
-            })
+        salvarEvento: async function(){
+    
+            var evento = {
+                nome_evento: this.nome,
+                data_evento: this.data,
+                descricao_evento: this.descricao,
+                local_nome: this.local,
+                local_lat: this.lat,
+                local_long: this.long,
+                tipo_evento: this.selected,
+                nota_media: this.media,
+                id_abrigo: firebase.auth().currentUser.uid
+            };
+            
+            const responseEvento = await Api().post('/evento', evento);
+
+            await this.getSeguidores()
+            this.$router.push('/listaEventos');
+            return responseEvento.data;
         },
         
         sendEmail(email,nome){
                 console.log("sendEmail")
-
-                
 
                 Email.send({
 					SecureToken : "29c9caf0-8bd4-46ca-a1c2-199f846d223a",
@@ -146,26 +143,15 @@ export default{
                     
             },
 
-			getSeguidores(){
-                var abrigoLogado = firebase.auth().currentUser
-                var nome
-
-               db.collection('abrigo').where("email", "==", abrigoLogado.email).get().then(querrySnapshot=>{
-                    querrySnapshot.forEach(doc =>{
-                        nome = doc.data().nome
-                        console.log(nome)
-                    })
-                })
-                console.log("getSeguidores")
-
-				 db.collection('abrigo').doc(abrigoLogado.uid).collection('seguidores')
-                        .get()
-                        .then(querrySnapshot=>{
-                            querrySnapshot.forEach(doc =>{
-                            var email = doc.data().emailSeguidor
-                                this.sendEmail(email,nome)
-                            })
-                        })
+			getSeguidores: async function(){
+                var id_abrigo = firebase.auth().currentUser.uid
+                const responseSeguidor = await Api().get(`/seguidor/${id_abrigo}`);
+                for (const seguidor of responseSeguidor.data) {
+                    var id_usuario = seguidor.id_usuario
+                    var responseUsuario = await Api().get(`usuario/${id_usuario}`)
+                    var usuario = responseUsuario.data
+                    this.sendEmail(usuario.email_usuario, usuario.nome_usuario)
+                };
             },
             
             

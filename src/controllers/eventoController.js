@@ -2,16 +2,16 @@ const db = require("../db");
 
 //create evento
 exports.createEvento = async (req, res) => {
-  const { nome_evento, data_evento, descricao_evento, local_nome, local_lat, local_long, tipo_evento, id_abrigo } = req.body;
+  const { nome_evento, data_evento, descricao_evento, local_nome, local_lat, local_long, tipo_evento, nota_media, id_abrigo } = req.body;
   try {
     const { rows } = await db.query(
-      "INSERT INTO evento (nome_evento, data_evento, descricao_evento, local_nome, local_lat, local_long, tipo_evento, id_abrigo) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)",
-      [nome_evento, data_evento, descricao_evento, local_nome, local_lat, local_long, tipo_evento, id_abrigo]
+      "INSERT INTO evento (nome_evento, data_evento, descricao_evento, local_nome, local_lat, local_long, tipo_evento, nota_media, id_abrigo) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)",
+      [nome_evento, data_evento, descricao_evento, local_nome, local_lat, local_long, tipo_evento, nota_media, id_abrigo]
     );
     res.status(201).send({
       message: "Evento added successfully!",
       body: {
-        employee: { nome_evento, data_evento, descricao_evento, local_nome, local_lat, local_long, tipo_evento, id_abrigo },
+        employee: { nome_evento, data_evento, descricao_evento, local_nome, local_lat, local_long, tipo_evento, nota_media, id_abrigo },
       },
     });
   } catch (error) {

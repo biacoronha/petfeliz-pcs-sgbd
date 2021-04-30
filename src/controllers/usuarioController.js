@@ -37,10 +37,10 @@ exports.listAllUsuarios = async (req, res) => {
 
 //get one usuario by id
 exports.findUsuarioById = async (req, res) => {
-  const { id } = req.params;
+  const { id_usuario } = req.params;
   try {
     const { rows } = await db.query(`SELECT * FROM usuario WHERE id_usuario = $1`,
-      [id]
+      [id_usuario]
     );
     if (!rows.length) {
       throw 'usuario_not_found';

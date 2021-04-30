@@ -83,3 +83,17 @@ exports.findSeguidorById = async (req, res) => {
   }
 };
 
+//get all seguidores by abrigo
+exports.findSeguidorByIdAbrigo = async (req, res) => {
+  const { id_abrigo } = req.params;
+  try {
+    const { rows } = await db.query(`SELECT * FROM seguidor WHERE id_abrigo = $1`, [id_abrigo]);
+    res.status(200).send(rows);
+  } catch (error) {
+    console.error('findSeguidorByIdAbrigo', error);
+    res.status(500).send({
+      message: "Ocorreu um erro."
+    });
+  }
+};
+

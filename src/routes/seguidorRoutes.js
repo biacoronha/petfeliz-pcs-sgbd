@@ -12,6 +12,9 @@ router.get('/seguidor', seguidorController.listAllSeguidores);
 // ==> Rota responsável por listar um determinado 'Seguidor' por Id: (GET): localhost:3000/api/seguidor/:id
 router.get('/seguidor/:id_usuario/:id_abrigo', seguidorController.findSeguidorById)
 
+// ==> Rota responsável por listar os 'Seguidor' de um determinado Abrigo: (GET): localhost:3000/api/seguidor/:id_abrigo
+router.get('/seguidor/:id_abrigo', seguidorController.findSeguidorByIdAbrigo)
+
 // ==> Rota responsável por deletar/excluir um determinado 'Seguidor por Id: localhost:3000/api/seguidor/:id
 router.delete('/seguidor/:id_usuario/:id_abrigo', seguidorController.deleteSeguidorById);
 

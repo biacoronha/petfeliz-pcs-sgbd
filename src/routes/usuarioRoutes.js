@@ -10,7 +10,7 @@ router.post('/usuario', usuarioController.createUsuario);
 router.get('/usuario', usuarioController.listAllUsuarios);
 
 // ==> Rota responsável por listar um determinado 'Usuario' por Id: (GET): localhost:3000/api/usuario/:id
-router.get('/usuario/:id', usuarioController.findUsuarioById)
+router.get('/usuario/:id_usuario', usuarioController.findUsuarioById)
 
 // ==> Rota reponsável por atualizar um determinado 'Usuario por Id: (PUT): localhost:3000/api/usuario/:id
 router.put('/usuario/:id', usuarioController.updateUsuarioById)
