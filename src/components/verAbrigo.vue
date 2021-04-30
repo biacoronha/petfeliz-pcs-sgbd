@@ -327,7 +327,7 @@ firebase.auth().onAuthStateChanged((user) => {
             }
             const responseLog = await Api().post('/votoAbrigoLog', votoAbrigoLog)
 
-            this.$forceUpdate();
+            this.$router.push("../listaEventos")
             
             return this.media;
         },
