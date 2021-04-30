@@ -39,11 +39,11 @@ exports.deleteSeguidorById = async (req, res) => {
   }
 };
 
+//Salvar log de seguidores
 exports.store = async (req, res) => {
     const data = await LogSeguidor.create(req.body);
     return res.json(data);
   }
-
 
 //get all seguidores
 exports.listAllSeguidores = async (req, res) => {

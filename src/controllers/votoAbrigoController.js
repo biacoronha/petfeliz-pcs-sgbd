@@ -1,4 +1,5 @@
 const db = require("../db");
+const LogVotoAbrigo = require("../Model/LogVotoAbrigo");
 
 //create votoAbrigo
 exports.createVotoAbrigo = async (req, res) => {
@@ -73,6 +74,12 @@ exports.deleteVotoAbrigoById = async (req, res) => {
     });
   }
 };
+
+//Salvar log de Voto no Abrigo
+exports.store = async (req, res) => {
+  const data = await LogVotoAbrigo.create(req.body);
+  return res.json(data);
+}
 
 //get media
 exports.getMedia = async (req, res) => {

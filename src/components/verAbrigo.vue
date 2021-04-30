@@ -317,6 +317,15 @@ firebase.auth().onAuthStateChanged((user) => {
                 nota_media: this.media
                 };
             const responseAbrigo = await Api().put(`/abrigo/${id_abrigo}`, abrigo); 
+            
+            var votoAbrigoLog = {
+                idUsuario: usuarioLogado.uid,
+                nomeUsuario: usuarioLogado.displayName,
+                idAbrigo: this.id_abrigo,
+                nomeAbrigo: this.nome,
+                nota: nota,
+            }
+            const responseLog = await Api().post('/votoAbrigoLog', votoAbrigoLog)
 
             this.$forceUpdate();
             
