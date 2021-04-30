@@ -18,4 +18,7 @@ router.put('/evento/:id_evento', eventoController.updateEventoById)
 // ==> Rota responsável por deletar/excluir um determinado 'Evento por Id: localhost:3000/api/evento/:id_evento
 router.delete('/evento/:id_evento', eventoController.deleteEventoById);
 
+// ==> Rota responsável por guardar em um Log as votações de Evento realizadas
+router.post("/confirmacaoEventoLog", eventoController.store);
+
 module.exports = router;
