@@ -37,10 +37,10 @@ exports.listAllEventos = async (req, res) => {
 
 //get one evento by id
 exports.findEventoById = async (req, res) => {
-  const { id } = req.params;
+  const { id_evento } = req.params;
   try {
     const { rows } = await db.query(`SELECT * FROM evento WHERE id_evento = $1`,
-      [id]
+      [id_evento]
     );
     if (!rows.length) {
       throw 'evento_not_found';

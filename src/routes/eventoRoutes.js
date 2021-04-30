@@ -10,7 +10,7 @@ router.post('/evento', eventoController.createEvento);
 router.get('/evento', eventoController.listAllEventos);
 
 // ==> Rota responsável por listar um determinado 'Evento' por Id: (GET): localhost:3000/api/evento/:id
-router.get('/evento/:id', eventoController.findEventoById)
+router.get('/evento/:id_evento', eventoController.findEventoById)
 
 // ==> Rota reponsável por atualizar um determinado 'Evento por Id: (PUT): localhost:3000/api/evento/:id
 router.put('/evento/:id', eventoController.updateEventoById)

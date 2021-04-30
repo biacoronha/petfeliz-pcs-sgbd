@@ -12,8 +12,8 @@
                   class="waves-effect waves-light btn-small">Recolhimento
                   </router-link>
              <li v-for="evento in eventos"
-             v-bind:key="evento.id" class="collection-item">
-             {{evento.nome}}
+             v-bind:key="evento.id_evento" class="collection-item">
+             {{evento.nome_evento}}
 
              <router-link class="secondary-content" v-bind:to="{name: 'verEvento', params:{id_abrigo: evento.id_abrigo}}">
                  <i class="fa fa-eye"></i>
@@ -35,52 +35,30 @@
     import firebase from 'firebase'
     import Navbar from './Navbar'
     import db from './firebaseInit'
+import Api from '../Api'
 
 export default{
     name: "listaEventos",
         data() {
             return {
-                usuarioEstaLogado: false,
-                usuarioLogado: false,
                 abrigoEstaLogado: false,
                 eventos: []
             }
         },
         created(){
-            if(firebase.auth().currentUser){
-                this.usuarioEstaLogado = true;
-                this.usuarioLogado = firebase.auth().currentUser.email;
-            }
-            
-            var usersRef = db.collection('abrigo').doc(firebase.auth().currentUser.uid)
-            if(firebase.auth().currentUser){
-                usersRef.get().then((docSnapshot) => {
-                    if(docSnapshot.exists) {
-                        usersRef.onSnapshot((doc) => {
-                            this.abrigoEstaLogado = true;
-                        })
-                    } else {
-                            this.usuarioEstaLogado = true;
-                    }
-                })
-                this.usuarioLogado = firebase.auth().currentUser.email;
-            }
+            var user = firebase.auth().currentUser
 
-            db.collection('eventos').orderBy('nome').get().then(querrySnapshot =>{
-                querrySnapshot.forEach(doc => {
-                    const data = {
-                        'id': doc.id,
-                        'id_abrigo':doc.data().id_abrigo,
-                        'nome':doc.data().nome,
-                        'local':doc.data().local,
-                        'tipo':doc.data().tipo,
-                        'form': doc.data().form,
-            
-                    }
-           
-                    this.eventos.push(data)
+            const responseAbrigo = Api().get(`/abrigo/${user.uid}`);
+            responseAbrigo.then(value => {
+                this.abrigoEstaLogado = true;
+            })
 
-                })
+
+            const responseEvento = Api().get(`/evento/`);
+            responseEvento.then(value => {
+                value.data.forEach(evento => {
+                     this.eventos.push(evento)
+                });
             })
         },
     
