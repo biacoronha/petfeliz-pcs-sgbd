@@ -18,4 +18,7 @@ router.delete('/votoEvento/:id', votoEventoController.deleteVotoEventoById);
 // ==> Rota responsável por retornar a media de um determinado evento: (GET): localhost:3000/api/votoEvento/media/:id_evento
 router.get('/votoAbrigo/media/:id_evento', votoEventoController.getMedia);
 
+// ==> Rota responsável por guardar em um Log as votações de Evento realizadas
+router.post("/votoEventoLog", votoEventoController.store);
+
 module.exports = router;

@@ -18,4 +18,7 @@ router.delete('/votoAbrigo/:id', votoAbrigoController.deleteVotoAbrigoById);
 // ==> Rota responsável por retornar a media de um determinado abrigo: (GET): localhost:3000/api/votoAbrigo/media/:id_abrigo
 router.get('/votoAbrigo/media/:id_abrigo', votoAbrigoController.getMedia);
 
+// ==> Rota responsável por guardar em um Log as votações de Abrigo realizadas
+router.post("/votoAbrigoLog", votoAbrigoController.store);
+
 module.exports = router;

@@ -1,6 +1,5 @@
 const router = require('express-promise-router')();
 const abrigoController = require('../controllers/abrigoController');
-const VotoAbrigoController = require('../controllers/votoAbrigoController');
 
 // ==> Definindo as rotas do CRUD - 'Abrigo'
 
@@ -18,7 +17,5 @@ router.put('/abrigo/:id_abrigo', abrigoController.updateAbrigoById)
 
 // ==> Rota responsável por deletar/excluir um determinado 'Abrigo por Id: localhost:3000/api/abrigo/:id
 router.delete('/abrigo/:id_abrigo', abrigoController.deleteAbrigoById);
-
-router.post("/votoAbrigoLog", VotoAbrigoController.store);
 
 module.exports = router;

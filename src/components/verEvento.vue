@@ -400,7 +400,16 @@ export default {
         };
         const responseEvento = await Api().put(`/evento/${id_evento}`, evento); 
 
-        this.$forceUpdate();
+        var votoEventoLog = {
+                idUsuario: usuarioLogado.uid,
+                nomeUsuario: usuarioLogado.displayName,
+                idEvento: id_evento,
+                nomeAbrigo: this.nome,
+                nota: nota,
+            }
+            const responseLog = await Api().post('/votoEventoLog', votoEventoLog)
+
+          this.$router.push("../listaEventos");
 
         return this.media;
 

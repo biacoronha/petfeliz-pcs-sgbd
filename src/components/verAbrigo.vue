@@ -331,8 +331,6 @@ firebase.auth().onAuthStateChanged((user) => {
             
             return this.media;
         },
-
-
     }
     }
 </script>

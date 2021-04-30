@@ -74,6 +74,12 @@ exports.deleteVotoEventoById = async (req, res) => {
   }
 };
 
+//Salvar log de Voto no Evento
+exports.store = async (req, res) => {
+  const data = await LogVotoAbrigo.create(req.body);
+  return res.json(data);
+}
+
 //get media
 exports.getMedia = async (req, res) => {
   const { id_evento} = req.params;
