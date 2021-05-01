@@ -15,9 +15,9 @@
       <li class="collection-item">Evento Realizador: {{abrigoRealizador}}<br><br>
       <router-link v-bind:to="{name: 'verAbrigo', params:{id_abrigo:id_abrigo}}" class="btn blue"> Página do Abrigo Realizador </router-link> <br> <br>
 
-      <li class="collection-item"> <button class="btn red" @click="confirmarPresenca" v-if="usuarioEstaConfirmado"> Cancelar Confirmação </button>
-        <button v-else class="btn green" @click="desconfirmarPresenca"> Confirmar Presença </button>
-      </li>                                  // -/\TROCAR POR CONFIRMAR AQUI-
+      <li class="collection-item"> <button class="btn red" @click="desconfirmarPresenca" v-if="usuarioEstaConfirmado"> Cancelar Confirmação </button>
+        <button v-else class="btn green" @click="confirmarPresenca"> Confirmar Presença </button>
+      </li>
 	  <li class="collection-item" v-if="media>=0 && media<0.5">
                 <p>Nota do Evento:</p>
                 <i class="small material-icons yellow-text" > star_border </i>
@@ -336,6 +336,14 @@ export default {
             console.log("Usuario Já Votou")
               this.voted = true;
           }
+
+          if(user){
+        const responseVoto = Api().get(`/votoAbrigo/${id_usuario}`);
+        responseVoto.then(value => {
+            console.log("Usuario Já Votou")
+            this.voted = true;
+        })        
+    }
         });
           
               })
@@ -433,17 +441,13 @@ export default {
 
     desconfirmarPresenca: async function(){
       if(confirm("Deseja confirmar presença?")){
-          usuarioLogado = firebase.auth().currentUser
-          
+          usuarioLogado = firebase.auth().currentUser          
           if(usuarioLogado){
-            var desconfirmacao_evento = {
-              id_usuario: firebase.auth().currentUser.uid,
-              id_evento: this.$route.params.id_evento
-            };
+             var id_usuario = firebase.auth().currentUser.uid;
+             var id_evento = this.$route.params.id_evento;            
 
-            const responseDesconfirmacaoEvento = await Api().delete('/confirmacaoEvento', desconfirmacao_evento);
+            const responseDesconfirmacaoEvento = await Api().delete(`/confirmacaoEvento/${id_usuario}/${id_evento}`);
           }
-
          }
     },
 
