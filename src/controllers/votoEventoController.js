@@ -1,4 +1,5 @@
 const db = require("../db");
+const LogVotoEvento = require("../Model/LogVotoEvento");
 
 //create votoEvento
 exports.createVotoEvento = async (req, res) => {
@@ -76,7 +77,7 @@ exports.deleteVotoEventoById = async (req, res) => {
 
 //Salvar log de Voto no Evento
 exports.store = async (req, res) => {
-  const data = await LogVotoAbrigo.create(req.body);
+  const data = await LogVotoEvento.create(req.body);
   return res.json(data);
 }
 

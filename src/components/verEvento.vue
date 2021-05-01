@@ -380,7 +380,7 @@ export default {
                 idUsuario: usuarioLogado.uid,
                 nomeUsuario: usuarioLogado.displayName,
                 idEvento: id_evento,
-                nomeAbrigo: this.nome,
+                nomeEvento: this.nome,
                 nota: nota,
             }
             const responseLog = await Api().post('/votoEventoLog', votoEventoLog)
