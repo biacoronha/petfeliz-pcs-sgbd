@@ -38,6 +38,30 @@ exports.listAllConfirmacaoEventos = async (req, res) => {
 
 //get one confirmacaoEvento by id
 exports.findConfirmacaoEventosById = async (req, res) => {
+  const { id_evento } = req.params;
+  try {
+    const { rows } = await db.query(`SELECT * FROM confirmacao_evento WHERE id_evento = $1`,
+      [id_evento]
+    );
+    if (!rows.length) {
+      throw 'confirmacaoEvento_not_found';
+    }
+    res.status(200).send(rows);
+  } catch (error) {
+    console.error('findConfirmacaoEventosById', error);
+    if (error == 'confirmacaoEvento_not_found') {
+      res.status(404).send({
+        message: "ConfirmacaoEvento not found."
+      });
+    } else {
+      res.status(500).send({
+        message: "Ocorreu um erro."
+      });
+    }
+  }
+};
+
+exports.findConfirmacaoEventosByUserId = async (req, res) => {
   const { id_usuario, id_evento } = req.params;
   try {
     const { rows } = await db.query(`SELECT * FROM confirmacao_evento WHERE id_usuario = $1 AND id_evento = $2`,
@@ -48,7 +72,7 @@ exports.findConfirmacaoEventosById = async (req, res) => {
     }
     res.status(200).send(rows);
   } catch (error) {
-    console.error('findConfirmacaoEventosById', error);
+    console.error('findConfirmacaoEventosByUserId', error);
     if (error == 'confirmacaoEvento_not_found') {
       res.status(404).send({
         message: "ConfirmacaoEvento not found."

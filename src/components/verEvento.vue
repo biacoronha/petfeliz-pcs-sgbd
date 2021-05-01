@@ -297,21 +297,25 @@ export default {
       if(user){
         var id_usuario = firebase.auth().currentUser.uid
             const id_evento = this.id_evento;
-            const responseConfirmacaoEvento = Api().get(`/confirmacaoEvento/${id_usuario}/${id_evento}`);
+            const responseConfirmacaoEvento = Api().get(`/confirmacaoEvento/${id_evento}`);
             responseConfirmacaoEvento.then((value) => {
               value.data.forEach(usuario => {
                 var id_usuario = usuario.id_usuario;
                 const responseUsuario = Api().get(`/usuario/${id_usuario}`);
                 responseUsuario.then((valueUsuario)=>{
                   this.confirmados.push(valueUsuario.data)
-                  if(valueUsuario.data.id_usuario == id_usuario){
-                    this.usuarioEstaConfirmado = true;
-                  }
                 })
               });
               return this.animal;
-            });                
-          
+            });         
+            const responseConfirmacaoUsuario = Api().get(`/confirmacaoEvento/${id_usuario}/${id_evento}`);
+            responseConfirmacaoUsuario.then((value) => {
+              if(value.data[0].id_usuario == id_usuario){
+                    this.usuarioEstaConfirmado = true;
+                  }
+            })
+
+
         const responseVoto = Api().get(`/votoEvento/${id_usuario}`);
         responseVoto.then(value => {
             console.log("Usuario Já Votou")
