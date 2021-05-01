@@ -87,12 +87,6 @@ exports.updateEventoById = async (req, res) => {
   }
 };
 
-//Salvar log de seguidores
-exports.store = async (req, res) => {
-  const data = await LogSeguidor.create(req.body);
-  return res.json(data);
-}
-
 //delete evento by id
 exports.deleteEventoById = async (req, res) => {
   const { id_evento } = req.params;

@@ -1,4 +1,5 @@
 const db = require("../db");
+const LogConfirmacao = require("../model/LogConfirmacao")
 
 //create confirmacaoEvento
 exports.createConfirmacaoEvento = async (req, res) => {
@@ -37,10 +38,10 @@ exports.listAllConfirmacaoEventos = async (req, res) => {
 
 //get one confirmacaoEvento by id
 exports.findConfirmacaoEventosById = async (req, res) => {
-  const { id_evento } = req.params;
+  const { id_usuario, id_evento } = req.params;
   try {
-    const { rows } = await db.query(`SELECT * FROM confirmacao_evento WHERE id_evento = $1`,
-      [id_evento]
+    const { rows } = await db.query(`SELECT * FROM confirmacao_evento WHERE id_usuario = $1 AND id_evento = $2`,
+      [id_usuario, id_evento]
     );
     if (!rows.length) {
       throw 'confirmacaoEvento_not_found';
@@ -60,12 +61,18 @@ exports.findConfirmacaoEventosById = async (req, res) => {
   }
 };
 
+//Salvar log de Confirmações
+exports.store = async (req, res) => {
+  const data = await LogConfirmacao.create(req.body);
+  return res.json(data);
+}
+
 //delete confirmacaoEvento by idusuario + idevento 
 exports.deleteConfirmacaoEvento = async (req, res) => {
   const { id_usuario , id_evento } = req.params;
   try {
     await db.query("DELETE FROM confirmacao_evento WHERE id_usuario = $1 AND id_evento = $2", [id_usuario , id_evento]);
-    res.status(200).send({ message: id_usuario + id_evento + "DELETE FROM confirmacao_evento WHERE {id_usuario} = $1 AND id_evento = $2",});
+    res.status(200).send({ message: id_usuario + " " + id_evento});
   } catch (error) {
     console.error('deleteConfirmacaoEventoById', error);
     res.status(500).send({

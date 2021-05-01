@@ -297,7 +297,7 @@ export default {
       if(user){
         var id_usuario = firebase.auth().currentUser.uid
             const id_evento = this.id_evento;
-            const responseConfirmacaoEvento = Api().get(`/confirmacaoEvento/${id_evento}`);
+            const responseConfirmacaoEvento = Api().get(`/confirmacaoEvento/${id_usuario}/${id_evento}`);
             responseConfirmacaoEvento.then((value) => {
               value.data.forEach(usuario => {
                 var id_usuario = usuario.id_usuario;
@@ -400,22 +400,40 @@ export default {
               id_usuario: firebase.auth().currentUser.uid,
               id_evento: this.$route.params.id_evento
             };
-
             const responseConfirmacaoEvento = await Api().post('/confirmacaoEvento', confirmacao_evento);
+
+            var confirmacaoEventoLog = {
+                idUsuario: usuarioLogado.uid,
+                nomeUsuario: usuarioLogado.displayName,
+                idEvento: this.$route.params.id_evento,
+                nomeEvento: this.nome,
+                operacao: "Confirmar Presença",
+            }
+            const responseLog = await Api().post('/confirmacaoEventoLog', confirmacaoEventoLog)
+
             this.$router.push("../listaEventos")
             }
-
          }
     },
 
     desconfirmarPresenca: async function(){
-      if(confirm("Deseja confirmar presença?")){
+      if(confirm("Deseja Desconfirmar presença?")){
           usuarioLogado = firebase.auth().currentUser          
           if(usuarioLogado){
              var id_usuario = firebase.auth().currentUser.uid;
              var id_evento = this.$route.params.id_evento;            
 
             const responseDesconfirmacaoEvento = await Api().delete(`/confirmacaoEvento/${id_usuario}/${id_evento}`);
+
+            var confirmacaoEventoLog = {
+                idUsuario: usuarioLogado.uid,
+                nomeUsuario: usuarioLogado.displayName,
+                idEvento: this.$route.params.id_evento,
+                nomeEvento: this.nome,
+                operacao: "Desconfirmar Presença",
+            }
+            const responseLog = await Api().post('/confirmacaoEventoLog', confirmacaoEventoLog)
+
             this.$router.push("../listaEventos")
           }
          }
