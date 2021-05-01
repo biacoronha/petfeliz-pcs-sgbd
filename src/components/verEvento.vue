@@ -15,9 +15,9 @@
       <li class="collection-item">Evento Realizador: {{abrigoRealizador}}<br><br>
       <router-link v-bind:to="{name: 'verAbrigo', params:{id_abrigo:id_abrigo}}" class="btn blue"> Página do Abrigo Realizador </router-link> <br> <br>
 
-      <li class="collection-item"> <button class="btn red" @click="desconfirmarPresenca" v-if="usuarioEstaConfirmado"> Cancelar Confirmação </button>
-        <button v-else class="btn green" @click="confirmarPresenca"> Confirmar Presença </button>
-      </li>
+      <li class="collection-item"> <button class="btn red" @click="confirmarPresenca" v-if="usuarioEstaConfirmado"> Cancelar Confirmação </button>
+        <button v-else class="btn green" @click="desconfirmarPresenca"> Confirmar Presença </button>
+      </li>                                  // -/\TROCAR POR CONFIRMAR AQUI-
 	  <li class="collection-item" v-if="media>=0 && media<0.5">
                 <p>Nota do Evento:</p>
                 <i class="small material-icons yellow-text" > star_border </i>
@@ -415,72 +415,36 @@ export default {
 
 	},
 
-    confirmarPresenca(){
+    confirmarPresenca: async function(){
         if(confirm("Deseja confirmar presença?")){
           usuarioLogado = firebase.auth().currentUser
           
           if(usuarioLogado){
-             db.collection("eventos")
-        .where("id_abrigo", "==", this.$route.params.id_abrigo)
-        .get()
-        .then(querySnapshot => {
-          querySnapshot.forEach(doc => {
-            this.id_abrigo = doc.data().id_abrigo;
-            
-            db.collection("eventos").doc(doc.id).collection("confirmados").doc(usuarioLogado.uid).set({
-              emailConfirmado : usuarioLogado.email,
-              idConfirmado : usuarioLogado.uid
-            });
-        });
-            }).then(
-                 db.collection("eventos")
-        .where("id_abrigo", "==", this.$route.params.id_abrigo)
-        .get()
-        .then(querySnapshot => {
-          querySnapshot.forEach(doc => {
-            this.id_abrigo = doc.data().id_abrigo;            
-            this.abrigoRealizador = doc.data().nome;
-              db.collection("usuario").doc(usuarioLogado.uid).collection("confirmacoes").doc(doc.id).set({
-                nomeEvento : this.nome,
-                idEvento : doc.id
-                });
-                this.$router.push("../listaEventos");
-        });
-              })
-            )
+            var confirmacao_evento = {
+              id_usuario: firebase.auth().currentUser.uid,
+              id_evento: this.$route.params.id_evento
+            };
 
+            const responseConfirmacaoEvento = await Api().post('/confirmacaoEvento', confirmacao_evento);
           }
 
-        }
+         }
     },
 
-    desconfirmarPresenca(){
-      if(confirm("Deseja Desconfirmar Presença?")){
-        usuarioLogado = firebase.auth().currentUser
-        db.collection("eventos")
-        .where("id_abrigo", "==", this.$route.params.id_abrigo)
-        .get()
-        .then(querySnapshot => {
-          querySnapshot.forEach(doc => {
-            this.id_abrigo = doc.data().id_abrigo;
-            
-            db.collection("eventos").doc(doc.id).collection("confirmados").doc(usuarioLogado.uid).delete()
-        });
-            }).then(
-                 db.collection("eventos")
-        .where("id_abrigo", "==", this.$route.params.id_abrigo)
-        .get()
-        .then(querySnapshot => {
-          querySnapshot.forEach(doc => {
-            this.id_abrigo = doc.data().id_abrigo;            
-            this.abrigoRealizador = doc.data().nome;
-              db.collection("usuario").doc(usuarioLogado.uid).collection("confirmacoes").doc(doc.id).delete();
-              this.$router.push("../listaEventos");
-        });
-              })
-            )
+    desconfirmarPresenca: async function(){
+      if(confirm("Deseja confirmar presença?")){
+          usuarioLogado = firebase.auth().currentUser
+          
+          if(usuarioLogado){
+            var confirmacao_evento = {
+              id_usuario: firebase.auth().currentUser.uid,
+              id_evento: this.$route.params.id_evento
+            };
 
-      }
+            const responseConfirmacaoEvento = await Api().delete('/confirmacaoEvento', confirmacao_evento);
+          }
+
+         }
     },
 
     deletarEvento: async function() {

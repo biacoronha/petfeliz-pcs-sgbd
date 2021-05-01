@@ -13,6 +13,6 @@ router.get('/confirmacaoEvento', confirmacaoEventoController.listAllConfirmacaoE
 router.get('/confirmacaoEvento/:id', confirmacaoEventoController.findConfirmacaoEventosById)
 
 // ==> Rota responsável por deletar/excluir um determinado 'ConfirmacaoEvento por Id: localhost:3000/api/confirmacaoEvento/:id
-router.delete('/confirmacaoEvento/:id', confirmacaoEventoController.deleteConfirmacaoEventoById);
+router.delete('/confirmacaoEvento', confirmacaoEventoController.deleteConfirmacaoEventoById);
 
 module.exports = router;
