@@ -162,7 +162,7 @@
     <li >
       <div class="collapsible-header"><i class="material-icons">account_circle</i>Visualizar Usuários Confirmados: {{confirmados.lenght}}</div>
       <div v-for="confirmado in confirmados"
-                    v-bind:key="confirmado.id" class="collapsible-body"><span>{{confirmado.emailConfirmado}}</span></div>
+                    v-bind:key="confirmado.id_usuario" class="collapsible-body"><span>{{confirmado.email_usuario}}</span></div>
     </li>
   </ul>
     
@@ -284,7 +284,7 @@ export default {
     
     $(document).ready(function(){
     $('.collapsible').collapsible();
-    //this.fetchData();
+    this.fetchData();
   });
 
  document.addEventListener('DOMContentLoaded', function() {
