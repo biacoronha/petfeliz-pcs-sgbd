@@ -436,12 +436,12 @@ export default {
           usuarioLogado = firebase.auth().currentUser
           
           if(usuarioLogado){
-            var confirmacao_evento = {
+            var desconfirmacao_evento = {
               id_usuario: firebase.auth().currentUser.uid,
               id_evento: this.$route.params.id_evento
             };
 
-            const responseConfirmacaoEvento = await Api().delete('/confirmacaoEvento', confirmacao_evento);
+            const responseDesconfirmacaoEvento = await Api().delete('/confirmacaoEvento', desconfirmacao_evento);
           }
 
          }

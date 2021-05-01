@@ -12,7 +12,7 @@ router.get('/confirmacaoEvento', confirmacaoEventoController.listAllConfirmacaoE
 // ==> Rota responsável por listar um determinado 'ConfirmacaoEvento' por Id: (GET): localhost:3000/api/confirmacaoEvento/:id
 router.get('/confirmacaoEvento/:id', confirmacaoEventoController.findConfirmacaoEventosById)
 
-// ==> Rota responsável por deletar/excluir um determinado 'ConfirmacaoEvento por Id: localhost:3000/api/confirmacaoEvento/:id
-router.delete('/confirmacaoEvento', confirmacaoEventoController.deleteConfirmacaoEventoById);
+// ==> Rota responsável por deletar/excluir um determinado 'ConfirmacaoEvento por Id: localhost:3000/api/confirmacaoEvento
+router.delete('/confirmacaoEvento', confirmacaoEventoController.deleteConfirmacaoEvento);
 
 module.exports = router;

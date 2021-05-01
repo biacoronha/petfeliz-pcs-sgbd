@@ -60,11 +60,11 @@ exports.findConfirmacaoEventosById = async (req, res) => {
   }
 };
 
-//delete confirmacaoEvento by id
-exports.deleteConfirmacaoEventoById = async (req, res) => {
+//delete confirmacaoEvento by idusuario + idevento + 
+exports.deleteConfirmacaoEvento = async (req, res) => {
   const { id_usuario , id_evento } = req.params;
   try {
-    await db.query("DELETE FROM confirmacao_evento WHERE id_usuario = $1, id_evento = $2", [id_usuario , id_evento]);
+    await db.query("DELETE FROM confirmacao_evento WHERE id_usuario = $1 AND id_evento = $2", [id_usuario , id_evento]);
     res.status(200).send({ message: "AbrigoAnimal deleted successfully!" });
   } catch (error) {
     console.error('deleteConfirmacaoEventoById', error);
