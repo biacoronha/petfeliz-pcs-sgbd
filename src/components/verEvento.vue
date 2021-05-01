@@ -228,6 +228,7 @@ export default {
   name: "verEvento",
   data() {
     return {
+      id_evento: null,
       id_abrigo: null,
       abrigoRealizador: null,
       nome: null,
@@ -265,7 +266,8 @@ export default {
             vm.tipo = evento.tipo_evento;
             vm.lat = evento.local_lat;
             vm.long = evento.local_long;
-            vm.media = evento.nota_media
+            vm.media = evento.nota_media;
+            vm.id_evento = id_evento;
 
             if(vm.id_abrigo == user.uid){
               vm.usuarioDono = true;
@@ -282,7 +284,7 @@ export default {
     
     $(document).ready(function(){
     $('.collapsible').collapsible();
-    this.fetchData();
+    //this.fetchData();
   });
 
  document.addEventListener('DOMContentLoaded', function() {
@@ -293,63 +295,28 @@ export default {
       
         console.log(this.nome)
       if(user){
-        db.collection("eventos")
-        .where("id_abrigo", "==", this.$route.params.id_abrigo)
-        .get()
-        .then(querySnapshot => {
-          querySnapshot.forEach(doc => {
-            
-            db.collection('eventos').doc(doc.id).collection('confirmados')
-                        .get()
-                        .then(querrySnapshot=>{
-                            querrySnapshot.forEach(doc =>{
-                                const data = {
-                                    'emailConfirmado': doc.data().emailConfirmado,
-                                    'idConfirmado': doc.data().idConfirmado                                    
-                                }
-                                this.confirmados.push(data);
-                                
-                            })
-                        }
-                        
-                        )
-            db.collection('eventos').doc(doc.id).collection('confirmados')
-                        .get()
-                        .then(querrySnapshot=>{
-                            querrySnapshot.forEach(doc =>{
-                                if(doc.data().emailConfirmado == user.email){
-                                  this.usuarioEstaConfirmado = true;
-                                }
-                            })
-                        }
-                        
-                        )
-        });
-            })
-
-        db.collection("usuario").doc(firebase.auth().currentUser.uid).collection("votosEvento")
-        .where("nomeEvento", "==", this.nome)
-        .get()
-        .then(querySnapshot => {
-          querySnapshot.forEach(doc => {               
-          if(doc.exists){ 
-            console.log("Usuario Já Votou")
-              this.voted = true;
-          }
-
-          if(user){
-        const responseVoto = Api().get(`/votoAbrigo/${id_usuario}`);
+        var id_usuario = firebase.auth().currentUser.uid
+            const id_evento = this.id_evento;
+            const responseConfirmacaoEvento = Api().get(`/confirmacaoEvento/${id_evento}`);
+            responseConfirmacaoEvento.then((value) => {
+              value.data.forEach(usuario => {
+                var id_usuario = usuario.id_usuario;
+                const responseUsuario = Api().get(`/usuario/${id_usuario}`);
+                responseUsuario.then((valueUsuario)=>{
+                  this.confirmados.push(valueUsuario.data)
+                  if(valueUsuario.data.id_usuario == id_usuario){
+                    this.usuarioEstaConfirmado = true;
+                  }
+                })
+              });
+              return this.animal;
+            });                
+          
+        const responseVoto = Api().get(`/votoEvento/${id_usuario}`);
         responseVoto.then(value => {
             console.log("Usuario Já Votou")
             this.voted = true;
-        })        
-    }
-        });
-          
-              })
-
-
-            
+        })            
       }
     })
   },
@@ -371,7 +338,8 @@ export default {
             this.tipo = evento.tipo_evento;
             this.lat = value.lat;
             this.long = value.long;
-            this.media = value.media
+            this.media = value.media;
+            this.id_evento = id_evento
       });
     }
     },
@@ -402,8 +370,8 @@ export default {
           local_nome: this.local,
           local_lat: this.lat,
           local_long: this.long,
-          tipo_evento: this.selected,
-          nota_media: this.nota,
+          tipo_evento: this.tipo,
+          nota_media: this.media,
           id_abrigo: this.id_abrigo
         };
         const responseEvento = await Api().put(`/evento/${id_evento}`, evento); 
@@ -434,7 +402,8 @@ export default {
             };
 
             const responseConfirmacaoEvento = await Api().post('/confirmacaoEvento', confirmacao_evento);
-          }
+            this.$router.push("../listaEventos")
+            }
 
          }
     },
@@ -447,6 +416,7 @@ export default {
              var id_evento = this.$route.params.id_evento;            
 
             const responseDesconfirmacaoEvento = await Api().delete(`/confirmacaoEvento/${id_usuario}/${id_evento}`);
+            this.$router.push("../listaEventos")
           }
          }
     },

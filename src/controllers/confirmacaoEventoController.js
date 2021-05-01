@@ -37,15 +37,15 @@ exports.listAllConfirmacaoEventos = async (req, res) => {
 
 //get one confirmacaoEvento by id
 exports.findConfirmacaoEventosById = async (req, res) => {
-  const { id } = req.params;
+  const { id_evento } = req.params;
   try {
     const { rows } = await db.query(`SELECT * FROM confirmacao_evento WHERE id_evento = $1`,
-      [id]
+      [id_evento]
     );
     if (!rows.length) {
       throw 'confirmacaoEvento_not_found';
     }
-    res.status(200).send(rows[0]);
+    res.status(200).send(rows);
   } catch (error) {
     console.error('findConfirmacaoEventosById', error);
     if (error == 'confirmacaoEvento_not_found') {

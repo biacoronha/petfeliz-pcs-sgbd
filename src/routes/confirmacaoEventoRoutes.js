@@ -10,7 +10,7 @@ router.post('/confirmacaoEvento', confirmacaoEventoController.createConfirmacaoE
 router.get('/confirmacaoEvento', confirmacaoEventoController.listAllConfirmacaoEventos);
 
 // ==> Rota responsável por listar um determinado 'ConfirmacaoEvento' por Id: (GET): localhost:3000/api/confirmacaoEvento/:id
-router.get('/confirmacaoEvento/:id', confirmacaoEventoController.findConfirmacaoEventosById)
+router.get('/confirmacaoEvento/:id_evento', confirmacaoEventoController.findConfirmacaoEventosById)
 
 // ==> Rota responsável por deletar/excluir um determinado 'ConfirmacaoEvento por Id: localhost:3000/api/confirmacaoEvento
 router.delete('/confirmacaoEvento/:id_usuario/:id_evento', confirmacaoEventoController.deleteConfirmacaoEvento);

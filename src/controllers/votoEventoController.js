@@ -6,7 +6,7 @@ exports.createVotoEvento = async (req, res) => {
   try {
     const { rows } = await db.query(
       "INSERT INTO voto_evento (id_usuario , id_evento, nota) VALUES ($1, $2, $3)",
-      [id_usuario , id_Evento]
+      [id_usuario , id_evento, nota]
     );
     res.status(201).send({
       message: "VotoEvento added successfully!",
@@ -37,10 +37,10 @@ exports.listAllVotosEvento = async (req, res) => {
 
 //get one votoEvento by id
 exports.findVotoEventoById = async (req, res) => {
-  const { id } = req.params;
+  const { id_usuario } = req.params;
   try {
-    const { rows } = await db.query(`SELECT * FROM voto_evento WHERE id_evento = $1`,
-      [id]
+    const { rows } = await db.query(`SELECT * FROM voto_evento WHERE id_usuario = $1`,
+      [id_usuario]
     );
     if (!rows.length) {
       throw 'votoEvento_not_found';
@@ -85,12 +85,15 @@ exports.getMedia = async (req, res) => {
   const { id_evento} = req.params;
   try {
     const { rows } = await db.query(
-      "SELECT sum(nota)/count(nota) as media FROM voto_abrigo WHERE id_evento = $1",
+      "SELECT sum(nota)/count(nota) as media FROM voto_evento WHERE id_evento = $1",
       [ id_evento]
     );
+    if (!rows.length) {
+      throw 'getMedia_not_found';
+    }
     res.status(200).send(rows[0]);
   } catch (error) {
-    console.error('createVotoAbrigo', error);
+    console.error('getMedia', error);
     res.status(500).send({
       message: "Ocorreu um erro."
     });

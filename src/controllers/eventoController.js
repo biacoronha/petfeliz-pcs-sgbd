@@ -73,8 +73,8 @@ exports.updateEventoById = async (req, res) => {
                                     local_lat = $5, 
                                     local_long = $6, 
                                     tipo_evento = $7,
-                                    id_abrigo = $8,
-                                    nota_media = $9
+                                    nota_media = $8,
+                                    id_abrigo = $9
                                     WHERE id_evento = $10`,
       [nome_evento, data_evento, descricao_evento, local_nome, local_lat, local_long, tipo_evento, nota_media, id_abrigo, id_evento]
     );

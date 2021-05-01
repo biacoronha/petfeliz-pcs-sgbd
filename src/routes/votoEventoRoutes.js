@@ -10,13 +10,13 @@ router.post('/votoEvento', votoEventoController.createVotoEvento);
 router.get('/votoEvento', votoEventoController.listAllVotosEvento);
 
 // ==> Rota responsável por listar um determinado 'VotoEvento' por Id: (GET): localhost:3000/api/votoEvento/:id
-router.get('/votoEvento/:id', votoEventoController.findVotoEventoById)
+router.get('/votoEvento/:id_usuario', votoEventoController.findVotoEventoById)
 
 // ==> Rota responsável por deletar/excluir um determinado 'VotoEvento por Id: localhost:3000/api/votoEvento/:id
 router.delete('/votoEvento/:id', votoEventoController.deleteVotoEventoById);
 
 // ==> Rota responsável por retornar a media de um determinado evento: (GET): localhost:3000/api/votoEvento/media/:id_evento
-router.get('/votoAbrigo/media/:id_evento', votoEventoController.getMedia);
+router.get('/votoEvento/media/:id_evento', votoEventoController.getMedia);
 
 // ==> Rota responsável por guardar em um Log as votações de Evento realizadas
 router.post("/votoEventoLog", votoEventoController.store);
