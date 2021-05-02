@@ -72,11 +72,10 @@
                         id_abrigo:treco.uid
                       }).then(()=>{
                         this.saveAbrigo();
-                      })
-                        }
                         this.$router.push('login')
                         location.reload();
-
+                      })
+                        }
                     },
                     function (err) {
                         alert('Espere! ' + err.message)
