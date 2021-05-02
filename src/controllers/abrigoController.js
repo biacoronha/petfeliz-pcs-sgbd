@@ -5,8 +5,8 @@ exports.createAbrigo = async (req, res) => {
   const { id_abrigo, nome_abrigo, email_abrigo, telefone_abrigo, endereco_abrigo, nota } = req.body;
   try {
     const { rows } = await db.query(
-      "INSERT INTO abrigo (id_abrigo, nome_abrigo, email_abrigo, telefone_abrigo, endereco_abrigo, nota) VALUES ($1, $2, $3, $4, $5, $6 )",
-      [id_abrigo, nome_abrigo, email_abrigo, telefone_abrigo, endereco_abrigo]
+      "INSERT INTO abrigo (id_abrigo, nome_abrigo, email_abrigo, telefone_abrigo, endereco_abrigo, nota_media) VALUES ($1, $2, $3, $4, $5, $6 )",
+      [id_abrigo, nome_abrigo, email_abrigo, telefone_abrigo, endereco_abrigo, nota]
     );
     res.status(201).send({
       message: "Abrigo added successfully!",

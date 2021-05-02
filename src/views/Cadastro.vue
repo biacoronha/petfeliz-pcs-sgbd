@@ -70,8 +70,9 @@
 						media: this.media,
                         countAvaliacoes: this.countAvaliacoes,
                         id_abrigo:treco.uid
-                      })
+                      }).then(()=>{
                         this.saveAbrigo();
+                      })
                         }
                         this.$router.push('login')
                         location.reload();
