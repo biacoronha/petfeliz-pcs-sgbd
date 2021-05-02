@@ -54,7 +54,9 @@ export default{
                     const tipo_animal = "Gato"
                     const response = Api().get(`/animal/byTipo/${id_abrigo}/${tipo_animal}`);
                     response.then((valueAnimal)=>{
-                        this.animal.push(valueAnimal.data)
+                        valueAnimal.data.forEach(element => {
+                            this.animal.push(element)
+                        });
                     })
                     return this.animal;                    
                 }

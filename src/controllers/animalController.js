@@ -71,7 +71,7 @@ exports.findAnimalByTipo = async (req, res) => {
     if (!rows.length) {
       throw 'animal_not_found';
     }
-    res.status(200).send(rows[0]);
+    res.status(200).send(rows);
   } catch (error) {
     console.error('findAnimalById', error);
     if (error == 'animal_not_found') {

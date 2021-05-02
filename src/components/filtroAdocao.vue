@@ -10,8 +10,8 @@
                   class="waves-effect waves-light btn-small">Recolhimento
                   </router-link>
              <li v-for="evento in eventos"
-             v-bind:key="evento.id" class="collection-item">
-             {{evento.nome}}
+             v-bind:key="evento.id_evento" class="collection-item">
+             {{evento.nome_evento}}
 
              <router-link class="secondary-content" v-bind:to="{name: 'verEvento', params:{id_abrigo: evento.id_abrigo}}">
                  <i class="fa fa-eye"></i>
@@ -33,6 +33,7 @@
     import firebase from 'firebase'
     import Navbar from './Navbar'
     import db from './firebaseInit'
+    import Api from '../Api';
 
 export default{
     name: "listaEventos",
@@ -45,6 +46,20 @@ export default{
             }
         },
         created(){
+
+            firebase.auth().onAuthStateChanged((user) => {
+                if(user){
+                const tipo_evento = "Adoção"
+                    const response = Api().get(`/evento/byTipo/${tipo_evento}`);
+                    response.then((valueEvento)=>{
+                        valueEvento.data.forEach(element => {
+                            this.eventos.push(element)
+                        });
+                    })
+                    return this.eventos;   
+                }
+            })
+            
             if(firebase.auth().currentUser){
                 this.usuarioEstaLogado = true;
                 this.usuarioLogado = firebase.auth().currentUser.email;
@@ -61,22 +76,7 @@ export default{
                             this.usuarioEstaLogado = true;
                     }
                 })
-                this.usuarioLogado = firebase.auth().currentUser.email;
-            }
-
-            db.collection('eventos').where("tipo", "==", "Adoção").get().then(querrySnapshot =>{
-                querrySnapshot.forEach(doc => {
-                    const data = {
-                        'id': doc.id,
-                        'id_abrigo':doc.data().id_abrigo,
-                        'nome':doc.data().nome,
-                        'local':doc.data().local,
-                        'tipo':doc.data().tipo,
-                        'form': doc.data().form
-                    }
-                    this.eventos.push(data)
-                })
-            })
+            }              
         },
     
 

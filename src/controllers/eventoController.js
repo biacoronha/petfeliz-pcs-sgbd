@@ -87,6 +87,30 @@ exports.updateEventoById = async (req, res) => {
   }
 };
 
+exports.findEventosByTipo = async (req, res) => {
+  const { tipo_evento } = req.params;
+  try {
+    const { rows } = await db.query(`SELECT * FROM evento WHERE tipo_evento = $1`,
+      [tipo_evento]
+    );
+    if (!rows.length) {
+      throw 'evento_not_found';
+    }
+    res.status(200).send(rows);
+  } catch (error) {
+    console.error('findEventosByTipo', error);
+    if (error == 'evento_not_found') {
+      res.status(404).send({
+        message: "Evento not found."
+      });
+    } else {
+      res.status(500).send({
+        message: "Ocorreu um erro."
+      });
+    }
+  }
+};
+
 //delete evento by id
 exports.deleteEventoById = async (req, res) => {
   const { id_evento } = req.params;

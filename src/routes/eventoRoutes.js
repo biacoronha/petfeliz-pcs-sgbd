@@ -18,4 +18,7 @@ router.put('/evento/:id_evento', eventoController.updateEventoById)
 // ==> Rota responsável por deletar/excluir um determinado 'Evento por Id: localhost:3000/api/evento/:id_evento
 router.delete('/evento/:id_evento', eventoController.deleteEventoById);
 
+// ==> Rota responsável por listar todos os 'Evento' por tipo tipo: (GET): localhost:3000/api/evento/byTipo/tipo
+router.get('/evento/byTipo/:tipo_evento', eventoController.findEventosByTipo)
+
 module.exports = router;

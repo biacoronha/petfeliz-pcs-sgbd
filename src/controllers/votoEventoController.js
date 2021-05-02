@@ -46,7 +46,7 @@ exports.findVotoEventoById = async (req, res) => {
     if (!rows.length) {
       throw 'votoEvento_not_found';
     }
-    res.status(200).send(rows[0]);
+    res.status(200).send(rows);
   } catch (error) {
     console.error('findVotoEventoById', error);
     if (error == 'votoEvento_not_found') {
