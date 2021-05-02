@@ -12,10 +12,11 @@
       <li class="collection-item">Tipo do Evento: {{tipo}} </li>
       <li class="collection-item">Latitude do local do Evento: {{lat}} </li>
       <li class="collection-item">Longitude do local do Evento: {{long}} </li>
-      <li class="collection-item">Evento Realizador: {{abrigoRealizador}}<br><br>
+      <li class="collection-item">Abrigo Realizador: {{abrigoRealizador}}<br><br>
       <router-link v-bind:to="{name: 'verAbrigo', params:{id_abrigo:id_abrigo}}" class="btn blue"> Página do Abrigo Realizador </router-link> <br> <br>
 
-      <li class="collection-item"> <button class="btn red" @click="desconfirmarPresenca" v-if="usuarioEstaConfirmado"> Cancelar Confirmação </button>
+      <li v-if="!usuarioAbrigo" class="collection-item"> 
+        <button class="btn red" @click="desconfirmarPresenca" v-if="usuarioEstaConfirmado"> Cancelar Confirmação </button>
         <button v-else class="btn green" @click="confirmarPresenca"> Confirmar Presença </button>
       </li>
 	  <li class="collection-item" v-if="media>=0 && media<0.5">
@@ -240,12 +241,12 @@ export default {
       confirmados: [],
       usuarioEstaConfirmado: false,
       usuarioDono: false,
+      usuarioAbrigo: false,
       lat: null,
-	  long: null,
+	    long: null,
 	  media: 0,
     countAvaliacoes: null,
-    voted:null
-	  
+    voted:null	  
     };
   },
   beforeRouteEnter(to, from, next) {
@@ -315,12 +316,18 @@ export default {
                   }
             })
 
-
         const responseVoto = Api().get(`/votoEvento/${id_usuario}`);
         responseVoto.then(value => {
             console.log("Usuario Já Votou")
             this.voted = true;
-        })            
+        })         
+        
+        const responseAbrigo = Api().get(`/abrigo/${user.uid}`)
+        responseAbrigo.then(value => {
+            if(value.data){
+              this.usuarioAbrigo = true;
+            }
+        })   
       }
     })
   },
