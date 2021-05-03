@@ -64,19 +64,15 @@ exports.findEventoById = async (req, res) => {
 exports.updateEventoById = async (req, res) => {
   const { id_evento } = req.params;
   try {
-    const { nome_evento, data_evento, descricao_evento, local_nome, local_lat, local_long, tipo_evento, nota_media, id_abrigo } = req.body;
+    const { nome_evento, data_evento, descricao_evento, local_nome, tipo_evento } = req.body;
     const { rows } = await db.query(`UPDATE evento 
                                     SET nome_evento = $1, 
                                     data_evento = $2, 
                                     descricao_evento = $3, 
                                     local_nome = $4,
-                                    local_lat = $5, 
-                                    local_long = $6, 
-                                    tipo_evento = $7,
-                                    nota_media = $8,
-                                    id_abrigo = $9
-                                    WHERE id_evento = $10`,
-      [nome_evento, data_evento, descricao_evento, local_nome, local_lat, local_long, tipo_evento, nota_media, id_abrigo, id_evento]
+                                    tipo_evento = $5
+                                    WHERE id_evento = $6`,
+      [nome_evento, data_evento, descricao_evento, local_nome, tipo_evento, id_evento]
     );
     res.status(200).send({ message: "Evento Updated Successfully!" });
   } catch (error) {

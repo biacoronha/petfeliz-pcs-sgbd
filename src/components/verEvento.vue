@@ -173,7 +173,7 @@
 
     <div v-if="usuarioDono" class="fixed-action-btn">
       <router-link
-        v-bind:to="{name: 'editarEvento', params:{id_abrigo:id_abrigo}}"
+        v-bind:to="{name: 'editarEvento', params:{id_evento:id_evento}}"
         class="btn-floating btn-large blue"
       >
         <i class="fa fa-pencil"></i>
