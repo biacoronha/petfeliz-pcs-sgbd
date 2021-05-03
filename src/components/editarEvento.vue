@@ -129,7 +129,7 @@
                 local_nome: this.local,
                 data_evento: this.data,
                 horario: this.horario,
-                tipo_evento: this.tipo
+                tipo_evento: this.selected
             }
             const responseEvento = await Api().put(`/evento/${id_evento}`, evento);
             this.$router.push("../listaEventos");
