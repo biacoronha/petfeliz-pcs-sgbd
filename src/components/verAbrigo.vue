@@ -97,7 +97,7 @@
                 <i class="small material-icons yellow-text"> star </i>
                 <i class="small material-icons yellow-text"> star </i></li>
 
-                <li v-if="!voted" class="collection-item">                 
+                <li v-if="!voted && !usuarioAbrigo" class="collection-item">                 
                 <h4> Avalie o Abrigo! </h4>               
                 <button class="red waves-effect waves-light btn-large" style="margin:10px" @click="avaliarAbrigo(1)">
                     <i class="large material-icons"> star </i></button>
@@ -120,7 +120,7 @@
                     <i class="small material-icons"> star </i>
                     <i class="small material-icons"> star </i></button>
                 </li>
-                <li class="collection-item" v-else>
+                <li class="collection-item" v-else-if="!usuarioAbrigo">
                     <h4> Obrigado pelo voto! </h4>
                     <button class="btn-large orange disabled" style="margin:10px" @click="avaliarAbrigo(1)">
                     <i class="large material-icons"> star </i></button>
@@ -147,7 +147,7 @@
             </ul>
             <div class="center-align">
             <br>
-            <button @click="seguirAbrigo" class="btn blue" id="btn_seguir" >Seguir Abrigo</button><br><br>
+            <button @click="seguirAbrigo" class="btn blue" id="btn_seguir" :disabled="usuarioAbrigo">Seguir Abrigo</button><br><br>
             <button @click="deixarSeguir" class="btn red" id="btn_seguir_red" disabled="true">Deixar de Seguir</button>
             <br> <br>
             </div>
@@ -180,6 +180,7 @@
             media: 0,
             countAvaliacoes: null,
             id_abrigo: null,
+            usuarioAbrigo: false,
             voted:null
            };
         },
@@ -233,7 +234,13 @@ firebase.auth().onAuthStateChanged((user) => {
         responseVoto.then(value => {
             console.log("Usuario Já Votou")
             this.voted = true;
-        })        
+        });
+        const responseAbrigo = Api().get(`/abrigo/${user.uid}`)
+        responseAbrigo.then(value => {
+            if(value.data){
+              this.usuarioAbrigo = true;
+            }
+        })            
     }
 })
 
