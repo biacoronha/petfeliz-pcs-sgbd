@@ -48,6 +48,7 @@
 <script>
     import db from './firebaseInit'
     import firebase from 'firebase'
+    import Api from '../Api';
 
     $(document).ready(function(){
     $('select').formSelect();
@@ -76,66 +77,85 @@
     },
 
     beforeRouteEnter(to, from, next) {
-    db.collection("eventos")
-      .where("id_abrigo", "==", to.params.id_abrigo)
-      .get()
-      .then(querySnapshot => {
-        querySnapshot.forEach(doc => {
-          next(vm => {
-                vm.id_abrigo = doc.data().id_abrigo;
-                vm.abrigoRealizador = doc.data().abrigoRealizador;
-                vm.nome = doc.data().nome;
-                vm.descricao = doc.data().descricao;
-                vm.local = doc.data().local;
-                vm.data = doc.data().data;
-                vm.horario = doc.data().horario;
-                vm.tipo = doc.data().tipo;
-                })
-            })
-        })
+    
+    var user = firebase.auth().currentUser
+    if(user){
+        const id_abrigo = to.params.id_abrigo;
+        const responseEvento = Api().get(`/evento/${id_abrigo}`);
+        responseEvento.then((value) => {
+            next(vm => {
+                const evento = value.data;
+                vm.id_abrigo = id_abrigo;
+                vm.nome = evento.nome_evento;
+                vm.descricao = evento.descricao_evento;
+                vm.local = evento.local_nome;
+                vm.data = evento.data_evento;
+                vm.horario = evento.horario;    // não está sendo salvo
+                vm.tipo = evento.tipo_evento;
+            });
+        });
+    }
+    
     },
     watch:{
         '$route': 'fetchData'
     },
     methods: {
         fetchData() {
-      db.collection("eventos")
-        .where("id_abrigo", "==", this.$route.params.id_abrigo)
-        .get()
-        .then(querySnapshot => {
-          querySnapshot.forEach(doc => {
-            this.id_abrigo = doc.data().id_abrigo;
-            this.nome = doc.data().nome;
-            this.descricao = doc.data().descricao;
-            this.local = doc.data().local;
-            this.data = doc.data().data;
-            this.horario = doc.data().horario;
-            this.tipo = doc.data().tipo;
-            this.abrigoRealizador = doc.data().abrigoRealizador;
-          });
-        });
+        var user = firebase.auth().currentUser
+        if(user){
+            const id_abrigo = to.params.id_abrigo;
+            const responseEvento = Api().get(`/evento/${id_abrigo}`);
+            responseEvento.then((value) => {
+                const evento = value.data;
+                this.id_abrigo = id_abrigo;
+                this.nome = evento.nome_evento;
+                this.descricao = evento.descricao_evento;
+                this.local = evento.local_nome;
+                this.data = evento.data_evento;
+                this.horario = evento.horario;    // não está sendo salvo
+                this.tipo = evento.tipo_evento;  
+            });
+        }
     },
-        updateEvento(){
-            db.collection('eventos').where('id_abrigo','==',this.$route.params.id_abrigo).get().then(querySnapshot => {
-            querySnapshot.forEach(doc => {
-               doc.ref.update({
-                   id_abrigo: this.id_abrigo,
-                   nome : this.nome,
-                   descricao : this.descricao,
-                   local : this.local,
-                   data : this.data,
-                   horario : this.horario,
-                   tipo : this.selected,
-                   abrigoRealizador : this.abrigoRealizador
+        updateEvento: async function (){
+
+            var user = firebase.auth().currentUser
+        if(user){
+            const id_abrigo = to.params.id_abrigo;
+            var evento = {
+                id_abrigo: this.id_abrigo,
+                nome: this.nome,
+                descricao: this.descricao,
+                local: this.local,
+                data: this.data,
+                horario: this.horario,
+                tipo: this.tipo
+            }
+            const responseEvento = await Api().put(`/evento/${id_abrigo}`, evento);
+            this.$router.push("../listaEventos");
+        }
+
+            // db.collection('eventos').where('id_abrigo','==',this.$route.params.id_abrigo).get().then(querySnapshot => {
+            // querySnapshot.forEach(doc => {
+            //    doc.ref.update({
+            //        id_abrigo: this.id_abrigo,
+            //        nome : this.nome,
+            //        descricao : this.descricao,
+            //        local : this.local,
+            //        data : this.data,
+            //        horario : this.horario,
+            //        tipo : this.selected,
+            //        abrigoRealizador : this.abrigoRealizador
                   
                    
-               })
-               .then(
-                   () =>
-                   this.$router.push({name: 'verEvento', params: {id_abrigo:this.id_abrigo}})
-               )
-            })
-            })
+            //    })
+            //    .then(
+            //        () =>
+            //        this.$router.push({name: 'verEvento', params: {id_abrigo:this.id_abrigo}})
+            //    )
+            // })
+            // })
         }
     
     }
