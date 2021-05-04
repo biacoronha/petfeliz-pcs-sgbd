@@ -316,7 +316,7 @@ export default {
                   }
             })
 
-        const responseVoto = Api().get(`/votoEvento/${id_usuario}`);
+        const responseVoto = Api().get(`/votoEvento/${id_usuario}/${id_evento}`);
         responseVoto.then(value => {
             console.log("Usuario Já Votou")
             this.voted = true;
@@ -337,7 +337,7 @@ export default {
       var user = firebase.auth().currentUser
       if(user){
           const id_evento = this.$route.params.id_evento;
-          const responseEvento = Api().get(`/abrigo/${id_evento}`);
+          const responseEvento = Api().get(`/evento/${id_evento}`);
           responseEvento.then((value) => {
             this.id_abrigo = value.id_abrigo;
             this.abrigoRealizador = value.abrigoRealizador;

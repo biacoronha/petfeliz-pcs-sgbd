@@ -61,6 +61,30 @@ exports.findVotoEventoById = async (req, res) => {
   }
 };
 
+exports.findVotoEventoByIdEvento = async (req, res) => {
+  const { id_usuario, id_evento } = req.params;
+  try {
+    const { rows } = await db.query(`SELECT * FROM voto_evento WHERE id_usuario = $1 AND id_evento = $2`,
+      [id_usuario, id_evento]
+    );
+    if (!rows.length) {
+      throw 'votoEvento_not_found';
+    }
+    res.status(200).send(rows);
+  } catch (error) {
+    console.error('findVotoEventoById', error);
+    if (error == 'votoEvento_not_found') {
+      res.status(404).send({
+        message: "VotoEvento not found."
+      });
+    } else {
+      res.status(500).send({
+        message: "Ocorreu um erro."
+      });
+    }
+  }
+};
+
 //delete votoEvento by id
 exports.deleteVotoEventoById = async (req, res) => {
   const { id_usuario , id_Evento } = req.params;

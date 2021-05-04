@@ -21,4 +21,7 @@ router.get('/votoEvento/media/:id_evento', votoEventoController.getMedia);
 // ==> Rota responsável por guardar em um Log as votações de Evento realizadas
 router.post("/votoEventoLog", votoEventoController.store);
 
+// ==> Rota responsável por listar um determinado 'VotoEvento' por Id: (GET): localhost:3000/api/votoEvento/:id
+router.get('/votoEvento/:id_usuario/:id_evento', votoEventoController.findVotoEventoByIdEvento);
+
 module.exports = router;
