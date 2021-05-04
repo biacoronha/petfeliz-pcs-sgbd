@@ -117,6 +117,7 @@ export default{
                 local_long: this.long,
                 tipo_evento: this.selected,
                 nota_media: this.media,
+                horario: this.horario,
                 id_abrigo: firebase.auth().currentUser.uid
             };
             

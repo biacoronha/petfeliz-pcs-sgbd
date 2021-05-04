@@ -263,7 +263,7 @@ export default {
             vm.descricao = evento.descricao_evento;
             vm.local = evento.local_nome;
             vm.data = evento.data_evento;
-            vm.horario = evento.horario_evento;
+            vm.horario = evento.horario;
             vm.tipo = evento.tipo_evento;
             vm.lat = evento.local_lat;
             vm.long = evento.local_long;

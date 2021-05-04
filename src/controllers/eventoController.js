@@ -2,16 +2,16 @@ const db = require("../db");
 
 //create evento
 exports.createEvento = async (req, res) => {
-  const { nome_evento, data_evento, descricao_evento, local_nome, local_lat, local_long, tipo_evento, nota_media, id_abrigo } = req.body;
+  const { nome_evento, data_evento, descricao_evento, local_nome, local_lat, local_long, tipo_evento, nota_media, id_abrigo, horario } = req.body;
   try {
     const { rows } = await db.query(
-      "INSERT INTO evento (nome_evento, data_evento, descricao_evento, local_nome, local_lat, local_long, tipo_evento, nota_media, id_abrigo) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)",
-      [nome_evento, data_evento, descricao_evento, local_nome, local_lat, local_long, tipo_evento, nota_media, id_abrigo]
+      "INSERT INTO evento (nome_evento, data_evento, descricao_evento, local_nome, local_lat, local_long, tipo_evento, nota_media, id_abrigo, horario) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)",
+      [nome_evento, data_evento, descricao_evento, local_nome, local_lat, local_long, tipo_evento, nota_media, id_abrigo, horario]
     );
     res.status(201).send({
       message: "Evento added successfully!",
       body: {
-        employee: { nome_evento, data_evento, descricao_evento, local_nome, local_lat, local_long, tipo_evento, nota_media, id_abrigo },
+        evento: { nome_evento, data_evento, descricao_evento, local_nome, local_lat, local_long, tipo_evento, nota_media, id_abrigo, horario },
       },
     });
   } catch (error) {
@@ -64,15 +64,18 @@ exports.findEventoById = async (req, res) => {
 exports.updateEventoById = async (req, res) => {
   const { id_evento } = req.params;
   try {
-    const { nome_evento, data_evento, descricao_evento, local_nome, tipo_evento } = req.body;
+    const { nome_evento, data_evento, descricao_evento, local_nome, tipo_evento, local_lat, local_long, horario } = req.body;
     const { rows } = await db.query(`UPDATE evento 
                                     SET nome_evento = $1, 
                                     data_evento = $2, 
                                     descricao_evento = $3, 
                                     local_nome = $4,
-                                    tipo_evento = $5
+                                    tipo_evento = $5,
+                                    local_lat = $7,
+                                    local_long = $8,
+                                    horario = $9
                                     WHERE id_evento = $6`,
-      [nome_evento, data_evento, descricao_evento, local_nome, tipo_evento, id_evento]
+      [nome_evento, data_evento, descricao_evento, local_nome, tipo_evento, id_evento, local_lat, local_long, horario]
     );
     res.status(200).send({ message: "Evento Updated Successfully!" });
   } catch (error) {

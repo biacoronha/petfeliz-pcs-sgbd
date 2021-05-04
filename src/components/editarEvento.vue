@@ -3,41 +3,67 @@
         <h3>Editar Evento</h3>
         <div class="row">
         <form @submit.prevent="updateEvento" class="col s12">
+        
+        <label>Nome do Evento:</label>
              <div class="row">
                 <div class="input-field col s12">
                 <input type="text" v-model="nome" required>
                 </div>    
             </div>
+            
+            <label>Descrição do Evento</label>
+             <div class="row">
+                <div class="input-field col s12">
+                <input type="text" v-model="descricao" required>
+                </div>    
+            </div>
+
+            <label>Local do Evento:</label>
              <div class="row">
                 <div class="input-field col s12">
                 <input type="text" v-model="local" required>
                 </div>    
             </div>
+            
+            <label>Tipo do Evento</label>
              <div class="row">
                 <div class="input-field col s12">
                 <select v-model="selected">
                 <option value="" disabled selected>Escolha o Tipo</option>
                 <option value="Adoção">Adoção</option>
                 <option value="Recolhimento">Recolhimento</option>
-            </select>
-    <label>Tipo do Evento</label>
+                </select>
                 </div>    
-            </div>
-             <div class="row">
-                <div class="input-field col s12">
-                <input type="text" v-model="descricao" required>
-                </div>    
-            </div>
+            </div>            
+
+            <label>Horário de início do evento</label>    
              <div class="row">
                 <div class="input-field col s12">
                 <input type="text" v-model="horario" required>
                 </div>    
             </div>
+
+            <label>Data da realização do evento (MM/DD/YYYY):</label>
              <div class="row">
                 <div class="input-field col s12">
                 <input type="text" v-model="data" required>
                 </div>    
             </div>
+            
+            <label>Latitude do local do evento:</label>
+            <div class="row">
+                <div class="input-field col s12">
+                    <input type="text" v-model="lat" required>
+                </div>
+            </div>
+
+            <label>Longitude do local do evento:</label>
+            <div class="row">
+                <div class="input-field col s12">
+                    <input type="text" v-model="long" required>
+                </div>
+            </div>
+
              <router-link to="../listaEventos" class="btn grey" style="margin-right:10px">Cancelar</router-link>
             <button type="submit" class="btn">Confirmar</button>           
             </form>
@@ -65,7 +91,9 @@
         local: null,
         data:null,
         horario:null,
-        tipo: null
+        tipo: null,
+        lat:null,
+        long:null,
         }
     },
 
@@ -91,6 +119,8 @@
                 vm.data = evento.data_evento;
                 vm.horario = evento.horario;    // não está sendo salvo
                 vm.tipo = evento.tipo_evento;
+                vm.lat = evento.local_lat;
+                vm.long = evento.local_long;
             });
         });
     }
@@ -114,6 +144,8 @@
                 this.data = evento.data_evento;
                 this.horario = evento.horario;    // não está sendo salvo
                 this.tipo = evento.tipo_evento;  
+                this.lat = evento.local_lat;
+                this.long = evento.local_long;
             });
         }
     },
@@ -129,10 +161,13 @@
                 local_nome: this.local,
                 data_evento: this.data,
                 horario: this.horario,
-                tipo_evento: this.selected
+                tipo_evento: this.selected,
+                local_lat: this.lat,
+                local_long: this.long
             }
             const responseEvento = await Api().put(`/evento/${id_evento}`, evento);
             this.$router.push("../listaEventos");
+            console.log(this.long)
         }
         }
     
