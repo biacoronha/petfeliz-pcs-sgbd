@@ -121,6 +121,7 @@
                 vm.tipo = evento.tipo_evento;
                 vm.lat = evento.local_lat;
                 vm.long = evento.local_long;
+                vm.media = evento.nota_media;
             });
         });
     }
@@ -146,6 +147,7 @@
                 this.tipo = evento.tipo_evento;  
                 this.lat = evento.local_lat;
                 this.long = evento.local_long;
+                this.nota_media = evento.nota_media;
             });
         }
     },
@@ -163,7 +165,8 @@
                 horario: this.horario,
                 tipo_evento: this.selected,
                 local_lat: this.lat,
-                local_long: this.long
+                local_long: this.long,
+                nota_media: this.nota_media
             }
             const responseEvento = await Api().put(`/evento/${id_evento}`, evento);
             this.$router.push("../listaEventos");
