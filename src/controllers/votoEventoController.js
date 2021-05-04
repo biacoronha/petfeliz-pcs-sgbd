@@ -61,6 +61,7 @@ exports.findVotoEventoById = async (req, res) => {
   }
 };
 
+//get one votoEvento by id + id_evento
 exports.findVotoEventoByIdEvento = async (req, res) => {
   const { id_usuario, id_evento } = req.params;
   try {

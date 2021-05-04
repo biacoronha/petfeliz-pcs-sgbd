@@ -230,7 +230,7 @@ firebase.auth().onAuthStateChanged((user) => {
     console.log(this.nome)
 
     if(user){
-        const responseVoto = Api().get(`/votoAbrigo/${id_usuario}`);
+        const responseVoto = Api().get(`/votoAbrigo/${id_usuario}/${this.$route.params.id_abrigo}`);
         responseVoto.then(value => {
             console.log("Usuario Já Votou")
             this.voted = true;

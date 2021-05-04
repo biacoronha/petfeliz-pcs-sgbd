@@ -61,6 +61,31 @@ exports.findVotoAbrigoById = async (req, res) => {
   }
 };
 
+//get one votoAbrigo by id + id_abrigo
+exports.findVotoAbrigoByIdAbrigo = async (req, res) => {
+  const { id_usuario, id_abrigo } = req.params;
+  try {
+    const { rows } = await db.query(`SELECT FROM voto_abrigo WHERE id_usuario = $1 AND id_abrigo = $2`,
+      [id_usuario, id_abrigo]
+    );
+    if (!rows.length) {
+      throw 'votoAbrigo_not_found';
+    }
+    res.status(200).send(rows[0]);
+  } catch (error) {
+    console.error('findVotoAbrigoById', error);
+    if (error == 'votoAbrigo_not_found') {
+      res.status(404).send({
+        message: "VotoAbrigo not found."
+      });
+    } else {
+      res.status(500).send({
+        message: "Ocorreu um erro."
+      });
+    }
+  }
+};
+
 //delete votoAbrigo by id
 exports.deleteVotoAbrigoById = async (req, res) => {
   const { id_usuario , id_abrigo } = req.params;
